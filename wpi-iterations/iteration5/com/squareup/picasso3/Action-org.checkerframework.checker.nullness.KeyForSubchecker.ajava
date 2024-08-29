@@ -1,0 +1,90 @@
+/*
+ * Copyright (C) 2013 Square, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.squareup.picasso3;
+
+import static com.squareup.picasso3.Picasso.Priority;
+
+@org.checkerframework.framework.qual.AnnotatedFor("org.checkerframework.checker.nullness.KeyForSubchecker")
+abstract class Action<T> {
+
+    final  Picasso picasso;
+
+    final  Request request;
+
+    final  Target<T> wrapper;
+
+      boolean willReplay;
+
+      boolean cancelled;
+
+    @org.checkerframework.dataflow.qual.SideEffectFree
+    Action( Picasso picasso,  Target<T> wrapper,  Request request) {
+        this.picasso = picasso;
+        this.request = request;
+        this.wrapper = wrapper;
+    }
+
+    @org.checkerframework.dataflow.qual.Impure
+    abstract void complete( Action<T> this, RequestHandler. Result result);
+
+    @org.checkerframework.dataflow.qual.Impure
+    abstract void error( Action<T> this,  Exception e);
+
+    @org.checkerframework.dataflow.qual.Impure
+    void cancel( Action<T> this) {
+        cancelled = true;
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+     Request getRequest( Action<T> this) {
+        return request;
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+    T getTarget( Action<T> this) {
+        return wrapper.target;
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+     String getKey( Action<T> this) {
+        return request.key;
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+      boolean isCancelled( Action<T> this) {
+        return cancelled;
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+      boolean willReplay( Action<T> this) {
+        return willReplay;
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+     Picasso getPicasso( Action<T> this) {
+        return picasso;
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+     Priority getPriority( Action<T> this) {
+        return request.priority;
+    }
+
+    @org.checkerframework.dataflow.qual.Pure
+     Object getTag( Action<T> this) {
+        return request.tag != null ? request.tag : this;
+    }
+}
