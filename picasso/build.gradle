@@ -42,3 +42,16 @@ dependencies {
 }
 
 apply from: rootProject.file('gradle/gradle-mvn-push.gradle')
+
+task printCombinedClasspath {
+    doLast {
+        def combinedClasspath = files()
+
+        tasks.withType(JavaCompile).each { task ->
+            combinedClasspath += task.classpath
+        }
+
+        println "Combined classpath:"
+        println combinedClasspath.asPath
+    }
+}
