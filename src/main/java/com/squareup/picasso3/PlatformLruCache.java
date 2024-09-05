@@ -36,7 +36,7 @@ final class PlatformLruCache {
     };
   }
 
-   public Bitmap get( String key) {
+   @Nullable public Bitmap get( String key) {
     BitmapAndSize bitmapAndSize = cache.get(key);
     return bitmapAndSize != null ? bitmapAndSize.bitmap : null;
   }

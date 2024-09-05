@@ -23,12 +23,12 @@ import static com.squareup.picasso3.Utils.checkNotNull;
 abstract class Action<T> {
   final Picasso picasso;
   final Request request;
-   final Target<T> wrapper;
+   @Nullable final Target<T> wrapper;
 
   boolean willReplay;
   boolean cancelled;
 
-  Action(Picasso picasso,  Target<T> wrapper, Request request) {
+  Action(Picasso picasso,  @Nullable Target<T> wrapper, Request request) {
     this.picasso = picasso;
     this.request = request;
     this.wrapper = wrapper;

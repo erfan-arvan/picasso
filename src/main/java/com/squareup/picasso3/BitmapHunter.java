@@ -72,11 +72,11 @@ class BitmapHunter implements Runnable {
   Request data;
   final RequestHandler requestHandler;
 
-   Action action;
-   List<Action> actions;
-   Result result;
-   Future<?> future;
-   Exception exception;
+   @Nullable Action action;
+   @Nullable List<Action> actions;
+   @Nullable Result result;
+   @Nullable Future<?> future;
+   @Nullable Exception exception;
   int retryCount;
   Priority priority;
 
@@ -307,7 +307,7 @@ class BitmapHunter implements Runnable {
     return future != null && future.isCancelled();
   }
 
-  boolean shouldRetry(boolean airplaneMode,  NetworkInfo info) {
+  boolean shouldRetry(boolean airplaneMode,  @Nullable NetworkInfo info) {
     boolean hasRetries = retryCount > 0;
     if (!hasRetries) {
       return false;
@@ -320,7 +320,7 @@ class BitmapHunter implements Runnable {
     return requestHandler.supportsReplay();
   }
 
-   Result getResult() {
+   @Nullable Result getResult() {
     return result;
   }
 
@@ -332,7 +332,7 @@ class BitmapHunter implements Runnable {
     return data;
   }
 
-   Action getAction() {
+   @Nullable Action getAction() {
     return action;
   }
 
@@ -340,11 +340,11 @@ class BitmapHunter implements Runnable {
     return picasso;
   }
 
-   List<Action> getActions() {
+   @Nullable List<Action> getActions() {
     return actions;
   }
 
-   Exception getException() {
+   @Nullable Exception getException() {
     return exception;
   }
 
@@ -380,7 +380,7 @@ class BitmapHunter implements Runnable {
   }
 
   
-  static Result applyTransformations(Picasso picasso, Request data,
+  @Nullable static Result applyTransformations(Picasso picasso, Request data,
       List<Transformation> transformations, Result result) {
     for (int i = 0, count = transformations.size(); i < count; i++) {
       final Transformation transformation = transformations.get(i);

@@ -97,7 +97,7 @@ final class Utils {
     // No instances.
   }
 
-  public static  <T> T checkNotNull( T value,  String message) {
+  public static  <T> T checkNotNull( @Nullable T value,  String message) {
     if (value == null) {
       throw new NullPointerException(message);
     }
@@ -144,7 +144,7 @@ final class Utils {
     log(owner, verb, logId, "");
   }
 
-  static void log(String owner, String verb, String logId,  String extras) {
+  static void log(String owner, String verb, String logId,  @Nullable String extras) {
     if (extras == null) {
       extras = "";
     }

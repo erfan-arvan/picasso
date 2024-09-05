@@ -65,8 +65,8 @@ public abstract class RequestHandler {
    */
   public static final class Result {
     private final Picasso.LoadedFrom loadedFrom;
-     private final Bitmap bitmap;
-     private final Drawable drawable;
+     @Nullable private final Bitmap bitmap;
+     @Nullable private final Drawable drawable;
     private final int exifRotation;
 
     public Result( Bitmap bitmap,  Picasso.LoadedFrom loadedFrom) {
@@ -83,8 +83,8 @@ public abstract class RequestHandler {
     }
 
     private Result(
-         Bitmap bitmap,
-         Drawable drawable,
+         @Nullable Bitmap bitmap,
+         @Nullable Drawable drawable,
          Picasso.LoadedFrom loadedFrom,
         int exifRotation) {
       this.bitmap = bitmap;
@@ -97,7 +97,7 @@ public abstract class RequestHandler {
      * The loaded {@link Bitmap}.
      * Mutually exclusive with {@link #getDrawable()}.
      */
-     public Bitmap getBitmap() {
+     @Nullable public Bitmap getBitmap() {
       return bitmap;
     }
 
@@ -105,7 +105,7 @@ public abstract class RequestHandler {
      * The loaded {@link Drawable}.
      * Mutually exclusive with {@link #getBitmap()}.
      */
-     public Drawable getDrawable() {
+     @Nullable public Drawable getDrawable() {
       return drawable;
     }
 
@@ -148,7 +148,7 @@ public abstract class RequestHandler {
     return 0;
   }
 
-  boolean shouldRetry(boolean airplaneMode,  NetworkInfo info) {
+  boolean shouldRetry(boolean airplaneMode,  @Nullable NetworkInfo info) {
     return false;
   }
 
@@ -160,7 +160,7 @@ public abstract class RequestHandler {
    * Lazily create {@link BitmapFactory.Options} based in given
    * {@link Request}, only instantiating them if needed.
    */
-   static BitmapFactory.Options createBitmapOptions(Request data) {
+   @Nullable static BitmapFactory.Options createBitmapOptions(Request data) {
     final boolean justBounds = data.hasSize();
     BitmapFactory.Options options = null;
     if (justBounds || data.config != null || data.purgeable) {
@@ -175,7 +175,7 @@ public abstract class RequestHandler {
     return options;
   }
 
-  static boolean requiresInSampleSize( BitmapFactory.Options options) {
+  static boolean requiresInSampleSize( @Nullable BitmapFactory.Options options) {
     return options != null && options.inJustDecodeBounds;
   }
 
