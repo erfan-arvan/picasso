@@ -17,6 +17,7 @@ package com.squareup.picasso3;
 
 import android.graphics.Bitmap;
 import android.support.v4.content.ContextCompat;
+import javax.annotation.Nullable;
 
 final class BitmapTargetAction extends Action<BitmapTarget> {
 
@@ -39,7 +40,7 @@ final class BitmapTargetAction extends Action<BitmapTarget> {
     }
   }
 
-  @Override void error(Exception e) {
+  @Override void error(@Nullable Exception e) {
     BitmapTarget target = getTarget();
     if (wrapper.errorResId != 0) {
       target.onBitmapFailed(e,

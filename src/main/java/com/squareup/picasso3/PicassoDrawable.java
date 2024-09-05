@@ -30,6 +30,7 @@ import android.widget.ImageView;
 
 import static android.graphics.Color.WHITE;
 import static com.squareup.picasso3.Picasso.LoadedFrom.MEMORY;
+import javax.annotation.Nullable;
 
 final class PicassoDrawable extends BitmapDrawable {
   // Only accessed from main thread.
@@ -69,7 +70,7 @@ final class PicassoDrawable extends BitmapDrawable {
    * Create or update the drawable on the target {@link ImageView} to display the supplied
    * placeholder image.
    */
-  static void setPlaceholder(ImageView target, Drawable placeholderDrawable) {
+  static void setPlaceholder(ImageView target, @Nullable Drawable placeholderDrawable) {
     target.setImageDrawable(placeholderDrawable);
     if (target.getDrawable() instanceof Animatable) {
       ((Animatable) target.getDrawable()).start();
@@ -80,7 +81,7 @@ final class PicassoDrawable extends BitmapDrawable {
   private final float density;
   private final Picasso.LoadedFrom loadedFrom;
 
-  Drawable placeholder;
+  @Nullable Drawable placeholder;
 
   long startTimeMillis;
   boolean animating;

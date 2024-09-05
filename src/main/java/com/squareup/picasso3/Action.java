@@ -16,6 +16,7 @@
 package com.squareup.picasso3;
 
 import static com.squareup.picasso3.Picasso.Priority;
+import javax.annotation.Nullable;
 
 abstract class Action<T> {
   final Picasso picasso;
@@ -24,8 +25,8 @@ abstract class Action<T> {
 
   boolean willReplay;
   boolean cancelled;
-
-  Action(Picasso picasso, Target<T> wrapper, Request request) {
+  
+  Action(Picasso picasso, @Nullable Target<T> wrapper, Request request) {
     this.picasso = picasso;
     this.request = request;
     this.wrapper = wrapper;
@@ -33,7 +34,7 @@ abstract class Action<T> {
 
   abstract void complete(RequestHandler.Result result);
 
-  abstract void error(Exception e);
+  abstract void error(@Nullable Exception e);
 
   void cancel() {
     cancelled = true;

@@ -26,6 +26,7 @@ import okio.Source;
 
 import static android.content.ContentResolver.SCHEME_FILE;
 import static com.squareup.picasso3.Picasso.LoadedFrom.DISK;
+import javax.annotation.Nullable;
 
 class AssetRequestHandler extends RequestHandler {
   private static final String ANDROID_ASSET = "android_asset";
@@ -34,7 +35,7 @@ class AssetRequestHandler extends RequestHandler {
 
   private final Context context;
   private final Object lock = new Object();
-  private volatile AssetManager assetManager;
+  @Nullable private volatile AssetManager assetManager;
 
   AssetRequestHandler(Context context) {
     this.context = context;

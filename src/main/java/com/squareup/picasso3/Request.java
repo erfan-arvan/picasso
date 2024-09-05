@@ -65,7 +65,7 @@ public final class Request {
    * caching. Two requests with the same value are considered to be for the same resource.
    */
   
-  public final String stableKey;
+  @Nullable public final String stableKey;
   /** List of custom transformations to be applied after the built-in transformations. */
   final List<Transformation> transformations;
   /** Target image width for resizing. */
@@ -108,7 +108,7 @@ public final class Request {
   public final String key;
   /** User-provided value to track this request. */
   
-  public final Object tag;
+  @Nullable public final Object tag;
 
   Request(Builder builder) {
     this.uri = builder.uri;
@@ -268,9 +268,9 @@ public final class Request {
 
   /** Builder for creating {@link Request} instances. */
   public static final class Builder {
-     Uri uri;
+     @Nullable Uri uri;
     int resourceId;
-     String stableKey;
+     @Nullable String stableKey;
     int targetWidth;
     int targetHeight;
     boolean centerCrop;
@@ -282,10 +282,10 @@ public final class Request {
     float rotationPivotY;
     boolean hasRotationPivot;
     boolean purgeable;
-     List<Transformation> transformations;
-     Bitmap.Config config;
+     @Nullable List<Transformation> transformations;
+     @Nullable Bitmap.Config config;
      Priority priority;
-     Object tag;
+     @Nullable Object tag;
     int memoryPolicy;
     int networkPolicy;
 
@@ -299,7 +299,7 @@ public final class Request {
       setResourceId(resourceId);
     }
 
-    Builder( Uri uri, int resourceId,  Bitmap.Config bitmapConfig) {
+    Builder( @Nullable Uri uri, int resourceId,  @Nullable Bitmap.Config bitmapConfig) {
       this.uri = uri;
       this.resourceId = resourceId;
       this.config = bitmapConfig;
@@ -403,7 +403,7 @@ public final class Request {
     }
 
     /** Internal use only. Used by {@link DeferredRequestCreator}. */
-    Object getTag() {
+    @Nullable Object getTag() {
       return tag;
     }
 

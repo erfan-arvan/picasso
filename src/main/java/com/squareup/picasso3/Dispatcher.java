@@ -56,6 +56,7 @@ import static com.squareup.picasso3.Utils.VERB_RETRYING;
 import static com.squareup.picasso3.Utils.getLogIdsForHunter;
 import static com.squareup.picasso3.Utils.hasPermission;
 import static com.squareup.picasso3.Utils.log;
+import javax.annotation.Nullable;
 
 class Dispatcher {
   private static final int RETRY_DELAY = 500;
@@ -134,11 +135,11 @@ class Dispatcher {
     handler.sendMessage(handler.obtainMessage(REQUEST_CANCEL, action));
   }
 
-  void dispatchPauseTag(Object tag) {
+  void dispatchPauseTag(@Nullable Object tag) {
     handler.sendMessage(handler.obtainMessage(TAG_PAUSE, tag));
   }
 
-  void dispatchResumeTag(Object tag) {
+  void dispatchResumeTag(@Nullable Object tag) {
     handler.sendMessage(handler.obtainMessage(TAG_RESUME, tag));
   }
 

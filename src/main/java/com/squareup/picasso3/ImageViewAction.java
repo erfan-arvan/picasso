@@ -19,12 +19,13 @@ import android.content.Context;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
+import javax.annotation.Nullable;
 
 class ImageViewAction extends Action<ImageView> {
 
-  Callback callback;
+  @Nullable Callback callback;
 
-  ImageViewAction(Picasso picasso, Target<ImageView> target, Request data, Callback callback) {
+  ImageViewAction(Picasso picasso, Target<ImageView> target, Request data, @Nullable Callback callback) {
     super(picasso, target, data);
     this.callback = callback;
   }
@@ -46,7 +47,7 @@ class ImageViewAction extends Action<ImageView> {
     }
   }
 
-  @Override public void error(Exception e) {
+  @Override public void error(@Nullable Exception e) {
     ImageView target = wrapper.target;
     Drawable placeholder = target.getDrawable();
     if (placeholder instanceof Animatable) {

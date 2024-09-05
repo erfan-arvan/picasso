@@ -1,0 +1,18 @@
+<component-set>
+  <components>
+    <component>
+      <role>org.apache.maven.wagon.Wagon</role>
+      <role-hint>https</role-hint>
+      <implementation>org.apache.maven.wagon.providers.http.LightweightHttpsWagon</implementation>
+      <instantiation-strategy>per-lookup</instantiation-strategy>
+      <description>LIghtweightHttpsWagon</description>
+    </component>
+    <component>
+      <role>org.apache.maven.wagon.Wagon</role>
+      <role-hint>http</role-hint>
+      <implementation>org.apache.maven.wagon.providers.http.LightweightHttpWagon</implementation>
+      <instantiation-strategy>per-lookup</instantiation-strategy>
+      <description>LightweightHttpWagon</description>
+    </component>
+  </components>
+</component-set>

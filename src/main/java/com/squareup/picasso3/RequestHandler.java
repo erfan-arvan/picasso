@@ -65,8 +65,8 @@ public abstract class RequestHandler {
    */
   public static final class Result {
     private final Picasso.LoadedFrom loadedFrom;
-     private final Bitmap bitmap;
-     private final Drawable drawable;
+     @Nullable private final Bitmap bitmap;
+     @Nullable private final Drawable drawable;
     private final int exifRotation;
 
     public Result( Bitmap bitmap,  Picasso.LoadedFrom loadedFrom) {
@@ -83,8 +83,8 @@ public abstract class RequestHandler {
     }
 
     private Result(
-         Bitmap bitmap,
-         Drawable drawable,
+         @Nullable Bitmap bitmap,
+         @Nullable Drawable drawable,
          Picasso.LoadedFrom loadedFrom,
         int exifRotation) {
       this.bitmap = bitmap;
@@ -105,7 +105,7 @@ public abstract class RequestHandler {
      * The loaded {@link Drawable}.
      * Mutually exclusive with {@link #getBitmap()}.
      */
-     public Drawable getDrawable() {
+     @Nullable public Drawable getDrawable() {
       return drawable;
     }
 
@@ -148,7 +148,7 @@ public abstract class RequestHandler {
     return 0;
   }
 
-  boolean shouldRetry(boolean airplaneMode,  NetworkInfo info) {
+  boolean shouldRetry(boolean airplaneMode,  @Nullable NetworkInfo info) {
     return false;
   }
 
@@ -218,7 +218,7 @@ public abstract class RequestHandler {
    * about the supplied request in order to do the decoding efficiently (such as through leveraging
    * {@code inSampleSize}).
    */
-  static Bitmap decodeStream(Source source, Request request) throws IOException {
+  static Bitmap decodeStream(@Nullable Source source, Request request) throws IOException {
     BufferedSource bufferedSource = Okio.buffer(source);
 
     if (Build.VERSION.SDK_INT >= 28) {

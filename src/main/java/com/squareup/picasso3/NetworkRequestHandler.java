@@ -90,7 +90,7 @@ final class NetworkRequestHandler extends RequestHandler {
     return 2;
   }
 
-  @Override boolean shouldRetry(boolean airplaneMode,  NetworkInfo info) {
+  @Override boolean shouldRetry(boolean airplaneMode,  @Nullable NetworkInfo info) {
     return info == null || info.isConnected();
   }
 

@@ -21,13 +21,14 @@ import android.view.View.OnAttachStateChangeListener;
 import android.view.ViewTreeObserver;
 import android.view.ViewTreeObserver.OnPreDrawListener;
 import android.widget.ImageView;
+import javax.annotation.Nullable;
 
 class DeferredRequestCreator implements OnPreDrawListener, OnAttachStateChangeListener {
   private final RequestCreator creator;
   @VisibleForTesting final ImageView target;
-  @VisibleForTesting Callback callback;
+  @Nullable @VisibleForTesting Callback callback;
 
-  DeferredRequestCreator(RequestCreator creator, ImageView target, Callback callback) {
+  DeferredRequestCreator(RequestCreator creator, ImageView target, @Nullable Callback callback) {
     this.creator = creator;
     this.target = target;
     this.callback = callback;
@@ -83,7 +84,7 @@ class DeferredRequestCreator implements OnPreDrawListener, OnAttachStateChangeLi
     }
   }
 
-  Object getTag() {
+  @Nullable Object getTag() {
     return creator.getTag();
   }
 }

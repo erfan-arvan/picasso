@@ -44,6 +44,7 @@ import static android.os.Build.VERSION_CODES.JELLY_BEAN_MR2;
 import static android.os.Process.THREAD_PRIORITY_BACKGROUND;
 import static com.squareup.picasso3.Picasso.TAG;
 import static java.lang.String.format;
+import javax.annotation.Nullable;
 
 final class Utils {
   static final String THREAD_PREFIX = "Picasso-";
@@ -143,7 +144,7 @@ final class Utils {
     log(owner, verb, logId, "");
   }
 
-  static void log(String owner, String verb, String logId, String extras) {
+  static void log(String owner, String verb, String logId, @Nullable String extras) {
     Log.d(TAG, format("%1$-11s %2$-12s %3$s %4$s", owner, verb, logId, extras));
   }
 
