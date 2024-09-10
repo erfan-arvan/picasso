@@ -1,0 +1,702 @@
+diff --git a/picasso/src/main/java/com/squareup/picasso3/Action.java b/picasso/src/main/java/com/squareup/picasso3/Action.java
+index 994d6b9a..1cf4f7cb 100644
+--- a/picasso/src/main/java/com/squareup/picasso3/Action.java
++++ b/picasso/src/main/java/com/squareup/picasso3/Action.java
+@@ -19,7 +19,7 @@ abstract class Action<T> {
+     return request;
+   }
+   T getTarget() {
+-    return wrapper.target;
++    return checkNotNull(wrapper, "wrapper == null").target;
+   }
+   String getKey() {
+     return request.key;
+diff --git a/picasso/src/main/java/com/squareup/picasso3/AssetRequestHandler.java b/picasso/src/main/java/com/squareup/picasso3/AssetRequestHandler.java
+index 96b7514c..22f1c402 100644
+--- a/picasso/src/main/java/com/squareup/picasso3/AssetRequestHandler.java
++++ b/picasso/src/main/java/com/squareup/picasso3/AssetRequestHandler.java
+@@ -11,18 +11,14 @@ class AssetRequestHandler extends RequestHandler {
+   }
+   @Override public boolean canHandleRequest( Request data) {
+     Uri uri = data.uri;
+-    return (SCHEME_FILE.equals(uri.getScheme())
+-        && !uri.getPathSegments().isEmpty() && ANDROID_ASSET.equals(uri.getPathSegments().get(0)));
++    return uri != null
++        && SCHEME_FILE.equals(uri.getScheme())
++        && !uri.getPathSegments().isEmpty()
++        && ANDROID_ASSET.equals(uri.getPathSegments().get(0));
+   }
+   @Override
+   public void load( Picasso picasso,  Request request,  Callback callback) {
+-    if (assetManager == null) {
+-      synchronized (lock) {
+-        if (assetManager == null) {
+-          assetManager = context.getAssets();
+-        }
+-      }
+-    }
++    initializeIfFirstTime();
+     boolean signaledCallback = false;
+     try {
+       Source source = Okio.source(assetManager.open(getFilePath(request)));
+@@ -42,7 +38,18 @@ class AssetRequestHandler extends RequestHandler {
+       }
+     }
+   }
++  @Initializer
++  private void initializeIfFirstTime() {
++    if (assetManager == null) {
++      synchronized (lock) {
++        if (assetManager == null) {
++          assetManager = context.getAssets();
++        }
++      }
++    }
++  }
+   static String getFilePath(Request request) {
+-    return request.uri.toString().substring(ASSET_PREFIX_LENGTH);
++    Uri uri = checkNotNull(request.uri, "request.uri == null");
++    return uri.toString().substring(ASSET_PREFIX_LENGTH);
+   }
+ }
+diff --git a/picasso/src/main/java/com/squareup/picasso3/BitmapHunter.java b/picasso/src/main/java/com/squareup/picasso3/BitmapHunter.java
+index 8fa81a14..d2251189 100644
+--- a/picasso/src/main/java/com/squareup/picasso3/BitmapHunter.java
++++ b/picasso/src/main/java/com/squareup/picasso3/BitmapHunter.java
+@@ -51,7 +51,7 @@ class BitmapHunter implements Runnable {
+         log(OWNER_HUNTER, VERB_EXECUTING, getLogIdsForHunter(this));
+       }
+       result = hunt();
+-      if (result.getBitmap() == null) {
++      if (result.getBitmap() == null && result.getDrawable() == null) {
+         dispatcher.dispatchFailed(this);
+       } else {
+         dispatcher.dispatchComplete(this);
+@@ -128,6 +128,9 @@ class BitmapHunter implements Runnable {
+       throw new RuntimeException(throwable);
+     }
+     Result result = resultReference.get();
++    if (result == null) {
++      throw new AssertionError("Request handler neither returned a result nor an exception.");
++    }
+     Bitmap bitmap = result.getBitmap();
+     if (bitmap != null) {
+       if (picasso.loggingEnabled) {
+@@ -190,15 +193,15 @@ class BitmapHunter implements Runnable {
+   }
+   private Priority computeNewPriority() {
+     Priority newPriority = LOW;
+-    boolean hasMultiple = actions != null && !actions.isEmpty();
+-    boolean hasAny = action != null || hasMultiple;
++    final boolean hasMultiple = actions != null && !actions.isEmpty();
++    final boolean hasAny = action != null || hasMultiple;
+     if (!hasAny) {
+       return newPriority;
+     }
+     if (action != null) {
+       newPriority = action.getPriority();
+     }
+-    if (hasMultiple) {
++    if (actions != null) {
+       for (int i = 0, n = actions.size(); i < n; i++) {
+         Priority actionPriority = actions.get(i).getPriority();
+         if (actionPriority.ordinal() > newPriority.ordinal()) {
+@@ -308,6 +311,7 @@ class BitmapHunter implements Runnable {
+         return null;
+       }
+       Bitmap bitmap = result.getBitmap();
++      if (bitmap == null) return result;
+       if (newResult == result && bitmap.isRecycled()) {
+         Picasso.HANDLER.post(new Runnable() {
+           @Override public void run() {
+diff --git a/picasso/src/main/java/com/squareup/picasso3/BitmapTargetAction.java b/picasso/src/main/java/com/squareup/picasso3/BitmapTargetAction.java
+index fab33b90..0c62e44d 100644
+--- a/picasso/src/main/java/com/squareup/picasso3/BitmapTargetAction.java
++++ b/picasso/src/main/java/com/squareup/picasso3/BitmapTargetAction.java
+@@ -19,6 +19,7 @@ final class BitmapTargetAction extends Action<BitmapTarget> {
+   }
+   @Override void error(Exception e) {
+     BitmapTarget target = getTarget();
++    Target<BitmapTarget> wrapper = checkNotNull(this.wrapper, "wrapper == null");
+     if (wrapper.errorResId != 0) {
+       target.onBitmapFailed(e,
+           ContextCompat.getDrawable(picasso.context, wrapper.errorResId));
+diff --git a/picasso/src/main/java/com/squareup/picasso3/ContactsPhotoRequestHandler.java b/picasso/src/main/java/com/squareup/picasso3/ContactsPhotoRequestHandler.java
+index c5ff06b9..3124b8c5 100644
+--- a/picasso/src/main/java/com/squareup/picasso3/ContactsPhotoRequestHandler.java
++++ b/picasso/src/main/java/com/squareup/picasso3/ContactsPhotoRequestHandler.java
+@@ -16,20 +16,17 @@ class ContactsPhotoRequestHandler extends RequestHandler {
+   }
+   @Override public boolean canHandleRequest( Request data) {
+     final Uri uri = data.uri;
+-    return (SCHEME_CONTENT.equals(uri.getScheme())
++    return uri != null
++        && SCHEME_CONTENT.equals(uri.getScheme())
+         && ContactsContract.Contacts.CONTENT_URI.getHost().equals(uri.getHost())
+-        && matcher.match(data.uri) != UriMatcher.NO_MATCH);
++        && matcher.match(data.uri) != UriMatcher.NO_MATCH;
+   }
+   @Override
+   public void load( Picasso picasso,  Request request,  Callback callback) {
+     boolean signaledCallback = false;
+     try {
+-      Source source = getSource(request);
+-      if (source == null) {
+-        signaledCallback = true;
+-        callback.onError(new IOException("no contact found"));
+-        return;
+-      }
++      Uri requestUri = checkNotNull(request.uri, "request.uri == null");
++      Source source = getSource(requestUri);
+       Bitmap bitmap = decodeStream(source, request);
+       signaledCallback = true;
+       callback.onSuccess(new Result(bitmap, DISK));
+@@ -39,15 +36,14 @@ class ContactsPhotoRequestHandler extends RequestHandler {
+       }
+     }
+   }
+-  private Source getSource(Request data) throws IOException {
++  private Source getSource(Uri uri) throws IOException {
+     ContentResolver contentResolver = context.getContentResolver();
+-    Uri uri = data.uri;
+     InputStream is;
+     switch (matcher.match(uri)) {
+       case ID_LOOKUP:
+         uri = ContactsContract.Contacts.lookupContact(contentResolver, uri);
+         if (uri == null) {
+-          return null;
++          throw new IOException("no contact found");
+         }
+       case ID_CONTACT:
+         is = openContactPhotoInputStream(contentResolver, uri, true);
+@@ -59,6 +55,9 @@ class ContactsPhotoRequestHandler extends RequestHandler {
+       default:
+         throw new IllegalStateException("Invalid uri: " + uri);
+     }
+-    return is == null ? null : Okio.source(is);
++    if (is == null) {
++      throw new FileNotFoundException("can't open input stream, uri: " + uri);
++    }
++    return Okio.source(is);
+   }
+ }
+diff --git a/picasso/src/main/java/com/squareup/picasso3/ContentStreamRequestHandler.java b/picasso/src/main/java/com/squareup/picasso3/ContentStreamRequestHandler.java
+index 245e95a8..2f453eba 100644
+--- a/picasso/src/main/java/com/squareup/picasso3/ContentStreamRequestHandler.java
++++ b/picasso/src/main/java/com/squareup/picasso3/ContentStreamRequestHandler.java
+@@ -5,19 +5,17 @@ class ContentStreamRequestHandler extends RequestHandler {
+     this.context = context;
+   }
+   @Override public boolean canHandleRequest( Request data) {
+-    return SCHEME_CONTENT.equals(data.uri.getScheme());
++    Uri uri = data.uri;
++    return uri != null && SCHEME_CONTENT.equals(uri.getScheme());
+   }
+   @Override
+   public void load( Picasso picasso,  Request request,  Callback callback) {
+     boolean signaledCallback = false;
+     try {
+-      Source source = getSource(request);
+-      if (source == null) {
+-        callback.onError(new IllegalStateException("null source from " + request.uri));
+-        return;
+-      }
++      Uri requestUri = checkNotNull(request.uri, "request.uri == null");
++      Source source = getSource(requestUri);
+       Bitmap bitmap = decodeStream(source, request);
+-      int exifRotation = getExifOrientation(request);
++      int exifRotation = getExifOrientation(requestUri);
+       signaledCallback = true;
+       callback.onSuccess(new Result(bitmap, DISK, exifRotation));
+     } catch (Exception e) {
+@@ -26,16 +24,22 @@ class ContentStreamRequestHandler extends RequestHandler {
+       }
+     }
+   }
+-  Source getSource(Request request) throws FileNotFoundException {
++  Source getSource(Uri uri) throws FileNotFoundException {
+     ContentResolver contentResolver = context.getContentResolver();
+-    InputStream inputStream = contentResolver.openInputStream(request.uri);
+-    return inputStream == null ? null : Okio.source(inputStream);
++    InputStream inputStream = contentResolver.openInputStream(uri);
++    if (inputStream == null) {
++      throw new FileNotFoundException("can't open input stream, uri: " + uri);
++    }
++    return Okio.source(inputStream);
+   }
+-  protected int getExifOrientation(Request request) throws IOException {
++  protected int getExifOrientation(Uri uri) throws IOException {
+     ContentResolver contentResolver = context.getContentResolver();
+     InputStream inputStream = null;
+     try {
+-      inputStream = contentResolver.openInputStream(request.uri);
++      inputStream = contentResolver.openInputStream(uri);
++      if (inputStream == null) {
++        throw new FileNotFoundException("can't open input stream, uri: " + uri);
++      }
+       ExifInterface exifInterface = new ExifInterface(inputStream);
+       return exifInterface.getAttributeInt(TAG_ORIENTATION, ORIENTATION_NORMAL);
+     } finally {
+diff --git a/picasso/src/main/java/com/squareup/picasso3/Dispatcher.java b/picasso/src/main/java/com/squareup/picasso3/Dispatcher.java
+index 8a4c42c2..5839d1d3 100644
+--- a/picasso/src/main/java/com/squareup/picasso3/Dispatcher.java
++++ b/picasso/src/main/java/com/squareup/picasso3/Dispatcher.java
+@@ -165,7 +165,7 @@ class Dispatcher {
+               "because tag '" + tag + "' was paused");
+         }
+       }
+-      if (hasMultiple) {
++      if (joined != null) {
+         for (int i = joined.size() - 1; i >= 0; i--) {
+           Action action = joined.get(i);
+           if (!action.getTag().equals(tag)) {
+@@ -217,8 +217,10 @@ class Dispatcher {
+     if (scansNetworkChanges) {
+       ConnectivityManager connectivityManager =
+           ContextCompat.getSystemService(context, ConnectivityManager.class);
++      if (connectivityManager != null) {
+         networkInfo = connectivityManager.getActiveNetworkInfo();
+       }
++    }
+     if (hunter.shouldRetry(airplaneMode, networkInfo)) {
+       if (hunter.getPicasso().loggingEnabled) {
+         log(OWNER_DISPATCHER, VERB_RETRYING, getLogIdsForHunter(hunter));
+@@ -237,11 +239,13 @@ class Dispatcher {
+   void performComplete(BitmapHunter hunter) {
+     if (shouldWriteToMemoryCache(hunter.data.memoryPolicy)) {
+       RequestHandler.Result result = hunter.getResult();
++      if (result != null) {
+         Bitmap bitmap = result.getBitmap();
+         if (bitmap != null) {
+           cache.set(hunter.getKey(), bitmap);
+         }
+       }
++    }
+     hunterMap.remove(hunter.getKey());
+     deliver(hunter);
+   }
+diff --git a/picasso/src/main/java/com/squareup/picasso3/FileRequestHandler.java b/picasso/src/main/java/com/squareup/picasso3/FileRequestHandler.java
+index 5a52574c..6f2b3deb 100644
+--- a/picasso/src/main/java/com/squareup/picasso3/FileRequestHandler.java
++++ b/picasso/src/main/java/com/squareup/picasso3/FileRequestHandler.java
+@@ -4,15 +4,17 @@ class FileRequestHandler extends ContentStreamRequestHandler {
+     super(context);
+   }
+   @Override public boolean canHandleRequest( Request data) {
+-    return SCHEME_FILE.equals(data.uri.getScheme());
++    Uri uri = data.uri;
++    return uri != null && SCHEME_FILE.equals(uri.getScheme());
+   }
+   @Override
+   public void load( Picasso picasso,  Request request,  Callback callback) {
+     boolean signaledCallback = false;
+     try {
+-      Source source = getSource(request);
++      Uri requestUri = checkNotNull(request.uri, "request.uri == null");
++      Source source = getSource(requestUri);
+       Bitmap bitmap = decodeStream(source, request);
+-      int exifRotation = getExifOrientation(request);
++      int exifRotation = getExifOrientation(requestUri);
+       signaledCallback = true;
+       callback.onSuccess(new Result(bitmap, DISK, exifRotation));
+     } catch (Exception e) {
+@@ -21,8 +23,12 @@ class FileRequestHandler extends ContentStreamRequestHandler {
+       }
+     }
+   }
+-  @Override protected int getExifOrientation(Request request) throws IOException {
+-    ExifInterface exifInterface = new ExifInterface(request.uri.getPath());
++  @Override protected int getExifOrientation(Uri uri) throws IOException {
++    String path = uri.getPath();
++    if (path == null) {
++      throw new FileNotFoundException("path == null, uri: " + uri);
++    }
++    ExifInterface exifInterface = new ExifInterface(path);
+     return exifInterface.getAttributeInt(TAG_ORIENTATION, ORIENTATION_NORMAL);
+   }
+ }
+diff --git a/picasso/src/main/java/com/squareup/picasso3/ImageViewAction.java b/picasso/src/main/java/com/squareup/picasso3/ImageViewAction.java
+index 7834df43..22de2ba9 100644
+--- a/picasso/src/main/java/com/squareup/picasso3/ImageViewAction.java
++++ b/picasso/src/main/java/com/squareup/picasso3/ImageViewAction.java
+@@ -1,7 +1,8 @@
+ package com.squareup.picasso3;
+ class ImageViewAction extends Action<ImageView> {
+    Callback callback;
+-  ImageViewAction(Picasso picasso, Target<ImageView> target, Request data, Callback callback) {
++  ImageViewAction(Picasso picasso, Target<ImageView> target, Request data,
++       Callback callback) {
+     super(picasso, target, data);
+     this.callback = callback;
+   }
+@@ -10,6 +11,7 @@ class ImageViewAction extends Action<ImageView> {
+       throw new AssertionError(
+           String.format("Attempted to complete action with no result!\n%s", this));
+     }
++    Target<ImageView> wrapper = checkNotNull(this.wrapper, "wrapper == null");
+     ImageView target = wrapper.target;
+     Context context = picasso.context;
+     boolean indicatorsEnabled = picasso.indicatorsEnabled;
+@@ -19,6 +21,7 @@ class ImageViewAction extends Action<ImageView> {
+     }
+   }
+   @Override public void error(Exception e) {
++    Target<ImageView> wrapper = checkNotNull(this.wrapper, "wrapper == null");
+     ImageView target = wrapper.target;
+     Drawable placeholder = target.getDrawable();
+     if (placeholder instanceof Animatable) {
+diff --git a/picasso/src/main/java/com/squareup/picasso3/Initializer.java b/picasso/src/main/java/com/squareup/picasso3/Initializer.java
+new file mode 100644
+index 00000000..d1d723b9
+--- /dev/null
++++ b/picasso/src/main/java/com/squareup/picasso3/Initializer.java
+@@ -0,0 +1,5 @@
++package com.squareup.picasso3;
++@Retention(SOURCE)
++@RestrictTo(LIBRARY)
++public @interface Initializer {
++}
+diff --git a/picasso/src/main/java/com/squareup/picasso3/MediaStoreRequestHandler.java b/picasso/src/main/java/com/squareup/picasso3/MediaStoreRequestHandler.java
+index 7019f52e..8210f6aa 100644
+--- a/picasso/src/main/java/com/squareup/picasso3/MediaStoreRequestHandler.java
++++ b/picasso/src/main/java/com/squareup/picasso3/MediaStoreRequestHandler.java
+@@ -8,28 +8,31 @@ class MediaStoreRequestHandler extends ContentStreamRequestHandler {
+   }
+   @Override public boolean canHandleRequest( Request data) {
+     final Uri uri = data.uri;
+-    return (SCHEME_CONTENT.equals(uri.getScheme())
+-            && MediaStore.AUTHORITY.equals(uri.getAuthority()));
++    return uri != null
++        && SCHEME_CONTENT.equals(uri.getScheme())
++        && MediaStore.AUTHORITY.equals(uri.getAuthority());
+   }
+   @Override
+   public void load( Picasso picasso,  Request request,  Callback callback) {
+     boolean signaledCallback = false;
+     try {
+       ContentResolver contentResolver = context.getContentResolver();
+-      int exifOrientation = getExifOrientation(request);
+-      String mimeType = contentResolver.getType(request.uri);
++      Uri requestUri = checkNotNull(request.uri, "request.uri == null");
++      int exifOrientation = getExifOrientation(requestUri);
++      String mimeType = contentResolver.getType(requestUri);
+       boolean isVideo = mimeType != null && mimeType.startsWith("video/");
+       if (request.hasSize()) {
+         PicassoKind picassoKind = getPicassoKind(request.targetWidth, request.targetHeight);
+         if (!isVideo && picassoKind == FULL) {
+-          Source source = getSource(request);
++          Source source = getSource(requestUri);
+           Bitmap bitmap = decodeStream(source, request);
+           signaledCallback = true;
+           callback.onSuccess(new Result(bitmap, DISK, exifOrientation));
+           return;
+         }
+-        long id = parseId(request.uri);
+-        BitmapFactory.Options options = createBitmapOptions(request);
++        long id = parseId(requestUri);
++        BitmapFactory.Options options =
++            checkNotNull(createBitmapOptions(request), "options == null");
+         options.inJustDecodeBounds = true;
+         calculateInSampleSize(request.targetWidth, request.targetHeight, picassoKind.width,
+             picassoKind.height, options, request);
+@@ -47,7 +50,7 @@ class MediaStoreRequestHandler extends ContentStreamRequestHandler {
+           return;
+         }
+       }
+-      Source source = getSource(request);
++      Source source = getSource(requestUri);
+       Bitmap bitmap = decodeStream(source, request);
+       signaledCallback = true;
+       callback.onSuccess(new Result(bitmap, DISK, exifOrientation));
+@@ -66,11 +69,11 @@ class MediaStoreRequestHandler extends ContentStreamRequestHandler {
+     return FULL;
+   }
+   @Override
+-  protected int getExifOrientation(Request request) {
++  protected int getExifOrientation(Uri uri) {
+     Cursor cursor = null;
+     try {
+       ContentResolver contentResolver = context.getContentResolver();
+-      cursor = contentResolver.query(request.uri, CONTENT_ORIENTATION, null, null, null);
++      cursor = contentResolver.query(uri, CONTENT_ORIENTATION, null, null, null);
+       if (cursor == null || !cursor.moveToFirst()) {
+         return 0;
+       }
+diff --git a/picasso/src/main/java/com/squareup/picasso3/NetworkRequestHandler.java b/picasso/src/main/java/com/squareup/picasso3/NetworkRequestHandler.java
+index 1d223740..4a89ffdd 100644
+--- a/picasso/src/main/java/com/squareup/picasso3/NetworkRequestHandler.java
++++ b/picasso/src/main/java/com/squareup/picasso3/NetworkRequestHandler.java
+@@ -9,7 +9,9 @@ final class NetworkRequestHandler extends RequestHandler {
+     this.stats = stats;
+   }
+   @Override public boolean canHandleRequest( Request data) {
+-    String scheme = data.uri.getScheme();
++    Uri uri = data.uri;
++    if (uri == null) return false;
++    String scheme = uri.getScheme();
+     return (SCHEME_HTTP.equals(scheme) || SCHEME_HTTPS.equals(scheme));
+   }
+   @Override public void load( Picasso picasso,  final Request request, 
+@@ -71,7 +73,8 @@ final class NetworkRequestHandler extends RequestHandler {
+         cacheControl = builder.build();
+       }
+     }
+-    okhttp3.Request.Builder builder = new okhttp3.Request.Builder().url(request.uri.toString());
++    Uri uri = checkNotNull(request.uri, "request.uri == null");
++    okhttp3.Request.Builder builder = new okhttp3.Request.Builder().url(uri.toString());
+     if (cacheControl != null) {
+       builder.cacheControl(cacheControl);
+     }
+diff --git a/picasso/src/main/java/com/squareup/picasso3/Picasso.java b/picasso/src/main/java/com/squareup/picasso3/Picasso.java
+index d63d89bf..d3d8bd4f 100644
+--- a/picasso/src/main/java/com/squareup/picasso3/Picasso.java
++++ b/picasso/src/main/java/com/squareup/picasso3/Picasso.java
+@@ -136,7 +136,10 @@ public class Picasso implements LifecycleObserver {
+         new ArrayList<>(targetToDeferredRequestCreator.values());
+     for (int i = 0, n = deferredRequestCreators.size(); i < n; i++) {
+       DeferredRequestCreator deferredRequestCreator = deferredRequestCreators.get(i);
+-      dispatcher.dispatchPauseTag(deferredRequestCreator.getTag());
++      Object tag = deferredRequestCreator.getTag();
++      if (tag != null) {
++        dispatcher.dispatchPauseTag(tag);
++      }
+     }
+   }
+   public void pauseTag( Object tag) {
+@@ -155,7 +158,10 @@ public class Picasso implements LifecycleObserver {
+         new ArrayList<>(targetToDeferredRequestCreator.values());
+     for (int i = 0, n = deferredRequestCreators.size(); i < n; i++) {
+       DeferredRequestCreator deferredRequestCreator = deferredRequestCreators.get(i);
+-      dispatcher.dispatchResumeTag(deferredRequestCreator.getTag());
++      Object tag = deferredRequestCreator.getTag();
++      if (tag != null) {
++        dispatcher.dispatchResumeTag(tag);
++      }
+     }
+   }
+   public void resumeTag( Object tag) {
+@@ -288,13 +294,13 @@ public class Picasso implements LifecycleObserver {
+     if (!shouldDeliver) {
+       return;
+     }
+-    Uri uri = hunter.getData().uri;
++    Uri uri = checkNotNull(hunter.getData().uri, "uri == null");
+     Exception exception = hunter.getException();
+     RequestHandler.Result result = hunter.getResult();
+     if (single != null) {
+       deliverAction(result, single, exception);
+     }
+-    if (hasMultiple) {
++    if (joined != null) {
+       for (int i = 0, n = joined.size(); i < n; i++) {
+         Action join = joined.get(i);
+         deliverAction(result, join, exception);
+@@ -321,7 +327,8 @@ public class Picasso implements LifecycleObserver {
+       }
+     }
+   }
+-  private void deliverAction(RequestHandler.Result result, Action action, Exception e) {
++  private void deliverAction( RequestHandler.Result result, Action action,
++       Exception e) {
+     if (action.isCancelled()) {
+       return;
+     }
+@@ -334,9 +341,10 @@ public class Picasso implements LifecycleObserver {
+         log(OWNER_MAIN, VERB_COMPLETED, action.request.logId(), "from " + result.getLoadedFrom());
+       }
+     } else {
+-      action.error(e);
++      Exception exception = checkNotNull(e, "e == null");
++      action.error(exception);
+       if (loggingEnabled) {
+-        log(OWNER_MAIN, VERB_ERRORED, action.request.logId(), e.getMessage());
++        log(OWNER_MAIN, VERB_ERRORED, action.request.logId(), exception.getMessage());
+       }
+     }
+   }
+diff --git a/picasso/src/main/java/com/squareup/picasso3/RemoteViewsAction.java b/picasso/src/main/java/com/squareup/picasso3/RemoteViewsAction.java
+index 7dba10a0..d1a260df 100644
+--- a/picasso/src/main/java/com/squareup/picasso3/RemoteViewsAction.java
++++ b/picasso/src/main/java/com/squareup/picasso3/RemoteViewsAction.java
+@@ -74,7 +74,8 @@ abstract class RemoteViewsAction extends Action<RemoteViewsAction.RemoteViewsTar
+      private final String notificationTag;
+     private final Notification notification;
+     NotificationAction(Picasso picasso, Request data, Target<RemoteViewsTarget> wrapper,
+-        int notificationId, Notification notification, String notificationTag, Callback callback) {
++        int notificationId, Notification notification,  String notificationTag,
++         Callback callback) {
+       super(picasso, data, wrapper, callback);
+       this.notificationId = notificationId;
+       this.notificationTag = notificationTag;
+@@ -83,7 +84,9 @@ abstract class RemoteViewsAction extends Action<RemoteViewsAction.RemoteViewsTar
+     @Override void update() {
+       NotificationManager manager =
+           ContextCompat.getSystemService(picasso.context, NotificationManager.class);
++      if (manager != null) {
+         manager.notify(notificationTag, notificationId, notification);
+       }
+     }
+   }
++}
+diff --git a/picasso/src/main/java/com/squareup/picasso3/Request.java b/picasso/src/main/java/com/squareup/picasso3/Request.java
+index 71c0c41b..f16d3756 100644
+--- a/picasso/src/main/java/com/squareup/picasso3/Request.java
++++ b/picasso/src/main/java/com/squareup/picasso3/Request.java
+@@ -47,7 +47,7 @@ public final class Request {
+     this.hasRotationPivot = builder.hasRotationPivot;
+     this.purgeable = builder.purgeable;
+     this.config = builder.config;
+-    this.priority = builder.priority;
++    this.priority = checkNotNull(builder.priority, "priority == null");
+     if (Looper.myLooper() == Looper.getMainLooper()) {
+       this.key = createKey();
+     } else {
+diff --git a/picasso/src/main/java/com/squareup/picasso3/RequestHandler.java b/picasso/src/main/java/com/squareup/picasso3/RequestHandler.java
+index d5d65509..947cfb88 100644
+--- a/picasso/src/main/java/com/squareup/picasso3/RequestHandler.java
++++ b/picasso/src/main/java/com/squareup/picasso3/RequestHandler.java
+@@ -56,14 +56,13 @@ public abstract class RequestHandler {
+   }
+    static BitmapFactory.Options createBitmapOptions(Request data) {
+     final boolean justBounds = data.hasSize();
+-    final boolean hasConfig = data.config != null;
+     BitmapFactory.Options options = null;
+-    if (justBounds || hasConfig || data.purgeable) {
++    if (justBounds || data.config != null || data.purgeable) {
+       options = new BitmapFactory.Options();
+       options.inJustDecodeBounds = justBounds;
+       options.inInputShareable = data.purgeable;
+       options.inPurgeable = data.purgeable;
+-      if (hasConfig) {
++      if (data.config != null) {
+         options.inPreferredConfig = data.config;
+       }
+     }
+@@ -72,8 +71,8 @@ public abstract class RequestHandler {
+   static boolean requiresInSampleSize( BitmapFactory.Options options) {
+     return options != null && options.inJustDecodeBounds;
+   }
+-  static void calculateInSampleSize(int reqWidth, int reqHeight, BitmapFactory.Options options,
+-      Request request) {
++  static void calculateInSampleSize(int reqWidth, int reqHeight,
++       BitmapFactory.Options options, Request request) {
+     calculateInSampleSize(reqWidth, reqHeight, options.outWidth, options.outHeight, options,
+         request);
+   }
+@@ -128,16 +127,16 @@ public abstract class RequestHandler {
+       byte[] bytes = bufferedSource.readByteArray();
+       if (calculateSize) {
+         BitmapFactory.decodeByteArray(bytes, 0, bytes.length, options);
+-        RequestHandler.calculateInSampleSize(request.targetWidth, request.targetHeight, options,
+-            request);
++        RequestHandler.calculateInSampleSize(request.targetWidth, request.targetHeight,
++            checkNotNull(options, "options == null"), request);
+       }
+       bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, options);
+     } else {
+       if (calculateSize) {
+         InputStream stream = new SourceBufferingInputStream(bufferedSource);
+         BitmapFactory.decodeStream(stream, null, options);
+-        RequestHandler.calculateInSampleSize(request.targetWidth, request.targetHeight, options,
+-            request);
++        RequestHandler.calculateInSampleSize(request.targetWidth, request.targetHeight,
++            checkNotNull(options, "options == null"), request);
+       }
+       bitmap = BitmapFactory.decodeStream(bufferedSource.inputStream(), null, options);
+     }
+@@ -165,7 +164,8 @@ public abstract class RequestHandler {
+     final BitmapFactory.Options options = createBitmapOptions(request);
+     if (requiresInSampleSize(options)) {
+       BitmapFactory.decodeResource(resources, id, options);
+-      calculateInSampleSize(request.targetWidth, request.targetHeight, options, request);
++      calculateInSampleSize(request.targetWidth, request.targetHeight,
++          checkNotNull(options, "options == null"), request);
+     }
+     return BitmapFactory.decodeResource(resources, id, options);
+   }
+diff --git a/picasso/src/main/java/com/squareup/picasso3/Target.java b/picasso/src/main/java/com/squareup/picasso3/Target.java
+index e3e084d8..07f85b1d 100644
+--- a/picasso/src/main/java/com/squareup/picasso3/Target.java
++++ b/picasso/src/main/java/com/squareup/picasso3/Target.java
+@@ -22,7 +22,8 @@ public class Target<T> {
+     this.errorDrawable = errorDrawable;
+     this.noFade = false;
+   }
+-  Target( T target, @DrawableRes int errorResId, Drawable errorDrawable, boolean noFade) {
++  Target( T target, @DrawableRes int errorResId,  Drawable errorDrawable,
++      boolean noFade) {
+     this.target = target;
+     this.errorResId = errorResId;
+     this.errorDrawable = errorDrawable;
+diff --git a/picasso/src/main/java/com/squareup/picasso3/Utils.java b/picasso/src/main/java/com/squareup/picasso3/Utils.java
+index 38944b0d..82b1223a 100644
+--- a/picasso/src/main/java/com/squareup/picasso3/Utils.java
++++ b/picasso/src/main/java/com/squareup/picasso3/Utils.java
+@@ -31,7 +31,7 @@ final class Utils {
+   private static final ByteString WEBP_FILE_HEADER_WEBP = ByteString.encodeUtf8("WEBP");
+   private Utils() {
+   }
+-  static <T> T checkNotNull(T value, String message) {
++  public static  <T> T checkNotNull( T value,  String message) {
+     if (value == null) {
+       throw new NullPointerException(message);
+     }
+@@ -72,6 +72,9 @@ final class Utils {
+     log(owner, verb, logId, "");
+   }
+   static void log(String owner, String verb, String logId,  String extras) {
++    if (extras == null) {
++      extras = "";
++    }
+     Log.d(TAG, format("%1$-11s %2$-12s %3$s %4$s", owner, verb, logId, extras));
+   }
+   static File createDefaultCacheDir(Context context) {
+diff --git a/picasso/src/test/java/com/squareup/picasso3/DispatcherTest.java b/picasso/src/test/java/com/squareup/picasso3/DispatcherTest.java
+index 2a2338d4..9644bf33 100644
+--- a/picasso/src/test/java/com/squareup/picasso3/DispatcherTest.java
++++ b/picasso/src/test/java/com/squareup/picasso3/DispatcherTest.java
+@@ -126,7 +126,7 @@ public class DispatcherTest {
+     Request data = new Request.Builder(URI_1).build();
+     Action action = noopAction(data);
+     BitmapHunter hunter =
+-        new BitmapHunter(mockPicasso(), null, null, null, action, EMPTY_REQUEST_HANDLER);
++        new BitmapHunter(mockPicasso(), dispatcher, cache, stats, action, EMPTY_REQUEST_HANDLER);
+     hunter.result = new RequestHandler.Result(bitmap1, MEMORY);
+     dispatcher.performComplete(hunter);
+     assertThat(cache.get(hunter.getKey())).isSameAs(hunter.result.getBitmap());
+@@ -135,7 +135,7 @@ public class DispatcherTest {
+     Request data = new Request.Builder(URI_1).memoryPolicy(MemoryPolicy.NO_STORE).build();
+     Action action = noopAction(data);
+     BitmapHunter hunter =
+-        new BitmapHunter(mockPicasso(), null, null, null, action, EMPTY_REQUEST_HANDLER);
++        new BitmapHunter(mockPicasso(), dispatcher, cache, stats, action, EMPTY_REQUEST_HANDLER);
+     hunter.result = new RequestHandler.Result(bitmap1, MEMORY);
+     dispatcher.performComplete(hunter);
+     assertThat(dispatcher.hunterMap).isEmpty();
+@@ -145,7 +145,7 @@ public class DispatcherTest {
+     Request data = new Request.Builder(URI_1).build();
+     Action action = noopAction(data);
+     BitmapHunter hunter =
+-        new BitmapHunter(mockPicasso(), null, null, null, action, EMPTY_REQUEST_HANDLER);
++        new BitmapHunter(mockPicasso(), dispatcher, cache, stats, action, EMPTY_REQUEST_HANDLER);
+     hunter.result = new RequestHandler.Result(bitmap1, MEMORY);
+     dispatcher.performComplete(hunter);
+     assertThat(dispatcher.hunterMap).isEmpty();
+@@ -154,7 +154,7 @@ public class DispatcherTest {
+     Request data = new Request.Builder(URI_1).build();
+     Action action = noopAction(data);
+     BitmapHunter hunter =
+-        new BitmapHunter(mockPicasso(), null, null, null, action, EMPTY_REQUEST_HANDLER);
++        new BitmapHunter(mockPicasso(), dispatcher, cache, stats, action, EMPTY_REQUEST_HANDLER);
+     hunter.result = new RequestHandler.Result(bitmap1, MEMORY);
+     hunter.future = new FutureTask<>(mock(Runnable.class), null);
+     hunter.future.cancel(false);
+@@ -185,7 +185,7 @@ public class DispatcherTest {
+   @Test public void performRetryForContentLengthResetsNetworkPolicy() {
+     NetworkInfo networkInfo = mockNetworkInfo(true);
+     when(connectivityManager.getActiveNetworkInfo()).thenReturn(networkInfo);
+-    BitmapHunter hunter = new BitmapHunter(mockPicasso(), dispatcher, null, null,
++    BitmapHunter hunter = new BitmapHunter(mockPicasso(), dispatcher, cache, stats,
+         mockAction(URI_KEY_2, URI_2), RETRYING_REQUEST_HANDLER);
+     hunter.exception = new ContentLengthException("304 error");
+     dispatcher.performRetry(hunter);
