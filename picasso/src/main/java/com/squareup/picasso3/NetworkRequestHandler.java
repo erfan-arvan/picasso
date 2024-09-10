@@ -1,51 +1,18 @@
-/*
- * Copyright (C) 2013 Square, Inc.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package com.squareup.picasso3;
-
-import android.graphics.Bitmap;
-import android.net.NetworkInfo;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import java.io.IOException;
-import okhttp3.CacheControl;
-import okhttp3.Call;
-import okhttp3.Response;
-import okhttp3.ResponseBody;
-
-import static com.squareup.picasso3.Picasso.LoadedFrom.DISK;
-import static com.squareup.picasso3.Picasso.LoadedFrom.NETWORK;
-
 final class NetworkRequestHandler extends RequestHandler {
   private static final String SCHEME_HTTP = "http";
   private static final String SCHEME_HTTPS = "https";
-
   private final Call.Factory callFactory;
   final Stats stats;
-
   NetworkRequestHandler(Call.Factory callFactory, Stats stats) {
     this.callFactory = callFactory;
     this.stats = stats;
   }
-
-  @Override public boolean canHandleRequest(@NonNull Request data) {
+  @Override public boolean canHandleRequest( Request data) {
     String scheme = data.uri.getScheme();
     return (SCHEME_HTTP.equals(scheme) || SCHEME_HTTPS.equals(scheme));
   }
-
-  @Override public void load(@NonNull Picasso picasso, @NonNull final Request request, @NonNull
+  @Override public void load( Picasso picasso,  final Request request, 
   final Callback callback) {
     okhttp3.Request callRequest = createRequest(request);
     callFactory.newCall(callRequest).enqueue(new okhttp3.Callback() {
@@ -54,13 +21,7 @@ final class NetworkRequestHandler extends RequestHandler {
           callback.onError(new ResponseException(response.code(), request.networkPolicy));
           return;
         }
-
-        // Cache response is only null when the response comes fully from the network. Both
-        // completely cached and conditionally cached responses will have a non-null cache response.
         Picasso.LoadedFrom loadedFrom = response.cacheResponse() == null ? NETWORK : DISK;
-
-        // Sometimes response content length is zero when requests are being replayed. Haven't found
-        // root cause to this but retrying the request seems safe to do so.
         ResponseBody body = response.body();
         if (loadedFrom == DISK && body.contentLength() == 0) {
           body.close();
@@ -79,25 +40,20 @@ final class NetworkRequestHandler extends RequestHandler {
           callback.onError(e);
         }
       }
-
       @Override public void onFailure(Call call, IOException e) {
         callback.onError(e);
       }
     });
   }
-
   @Override int getRetryCount() {
     return 2;
   }
-
-  @Override boolean shouldRetry(boolean airplaneMode, @Nullable NetworkInfo info) {
+  @Override boolean shouldRetry(boolean airplaneMode,  NetworkInfo info) {
     return info == null || info.isConnected();
   }
-
   @Override boolean supportsReplay() {
     return true;
   }
-
   private static okhttp3.Request createRequest(Request request) {
     CacheControl cacheControl = null;
     int networkPolicy = request.networkPolicy;
@@ -115,24 +71,20 @@ final class NetworkRequestHandler extends RequestHandler {
         cacheControl = builder.build();
       }
     }
-
     okhttp3.Request.Builder builder = new okhttp3.Request.Builder().url(request.uri.toString());
     if (cacheControl != null) {
       builder.cacheControl(cacheControl);
     }
     return builder.build();
   }
-
   static class ContentLengthException extends RuntimeException {
     ContentLengthException(String message) {
       super(message);
     }
   }
-
   static final class ResponseException extends RuntimeException {
     final int code;
     final int networkPolicy;
-
     ResponseException(int code, int networkPolicy) {
       super("HTTP " + code);
       this.code = code;

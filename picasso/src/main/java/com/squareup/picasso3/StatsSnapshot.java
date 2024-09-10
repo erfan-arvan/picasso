@@ -1,30 +1,4 @@
-/*
- * Copyright (C) 2013 Square, Inc.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package com.squareup.picasso3;
-
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.util.Log;
-import java.io.IOException;
-import okio.Buffer;
-import okio.BufferedSink;
-
-import static com.squareup.picasso3.Picasso.TAG;
-
-/** Represents all stats for a {@link Picasso} instance at a single point in time. */
 public final class StatsSnapshot {
   public final int maxSize;
   public final int size;
@@ -39,9 +13,7 @@ public final class StatsSnapshot {
   public final int downloadCount;
   public final int originalBitmapCount;
   public final int transformedBitmapCount;
-
   public final long timeStamp;
-
   StatsSnapshot(int maxSize, int size, long cacheHits, long cacheMisses,
       long totalDownloadSize, long totalOriginalBitmapSize, long totalTransformedBitmapSize,
       long averageDownloadSize, long averageOriginalBitmapSize, long averageTransformedBitmapSize,
@@ -61,9 +33,7 @@ public final class StatsSnapshot {
     this.transformedBitmapCount = transformedBitmapCount;
     this.timeStamp = timeStamp;
   }
-
-  /** Prints out this {@link StatsSnapshot} into log. */
-  @SuppressWarnings("UnusedDeclaration") public void dump() {
+   public void dump() {
     Buffer buffer = new Buffer();
     try {
       dump(buffer);
@@ -72,9 +42,7 @@ public final class StatsSnapshot {
     }
     Log.i(TAG, buffer.readUtf8());
   }
-
-  /** Writes this {@link StatsSnapshot} to the provided {@link BufferedSink}. */
-  public void dump(@NonNull BufferedSink sink) throws IOException {
+  public void dump( BufferedSink sink) throws IOException {
     sink.writeUtf8("===============BEGIN PICASSO STATS ===============");
     sink.writeUtf8("\n");
     sink.writeUtf8("Memory Cache Stats");
@@ -128,8 +96,6 @@ public final class StatsSnapshot {
     sink.writeUtf8("===============END PICASSO STATS ===============");
     sink.writeUtf8("\n");
   }
-
-  @Nullable
   @Override public String toString() {
     return "StatsSnapshot{"
         + "maxSize="
