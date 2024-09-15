@@ -14,12 +14,7 @@
  * limitations under the License.
  */
 package com.squareup.picasso3;
-
-import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
-
+import javax.annotation.Nullable;
 import static com.squareup.picasso3.Picasso.LoadedFrom.DISK;
 
 public final class ResourceDrawableRequestHandler extends RequestHandler {

@@ -14,12 +14,7 @@
  * limitations under the License.
  */
 package com.squareup.picasso3;
-
-import android.support.annotation.NonNull;
-
-public interface Callback {
-  void onSuccess();
-
+import javax.annotation.Nullable;
   void onError(@NonNull Throwable t);
 
   class EmptyCallback implements Callback {

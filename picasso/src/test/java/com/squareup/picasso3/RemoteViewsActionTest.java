@@ -14,12 +14,7 @@
  * limitations under the License.
  */
 package com.squareup.picasso3;
-
-import android.graphics.Bitmap;
-import android.widget.ImageView;
-import android.widget.RemoteViews;
-import com.squareup.picasso3.RemoteViewsAction.RemoteViewsTarget;
-import org.junit.Before;
+import javax.annotation.Nullable;import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;

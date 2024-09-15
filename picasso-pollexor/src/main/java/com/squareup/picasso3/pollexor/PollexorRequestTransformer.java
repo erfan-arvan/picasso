@@ -1,10 +1,5 @@
 package com.squareup.picasso3.pollexor;
-
-import android.net.Uri;
-import android.os.Build;
-import com.squareup.picasso3.Request;
-import com.squareup.pollexor.Thumbor;
-import com.squareup.pollexor.ThumborUrlBuilder;
+import javax.annotation.Nullable;import com.squareup.pollexor.ThumborUrlBuilder;
 import com.squareup.pollexor.ThumborUrlBuilder.ImageFormat;
 
 import static com.squareup.picasso3.Picasso.RequestTransformer;

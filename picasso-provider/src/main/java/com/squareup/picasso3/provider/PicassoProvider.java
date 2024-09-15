@@ -1,10 +1,5 @@
 package com.squareup.picasso3.provider;
-
-import android.annotation.SuppressLint;
-import com.squareup.picasso3.Picasso;
-
-/**
- * This instance is automatically initialized with defaults that are suitable to most
+import javax.annotation.Nullable; * This instance is automatically initialized with defaults that are suitable to most
  * implementations.
  * <ul>
  * <li>LRU memory cache of 15% the available application RAM</li>

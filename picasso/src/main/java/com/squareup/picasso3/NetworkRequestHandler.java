@@ -14,13 +14,7 @@
  * limitations under the License.
  */
 package com.squareup.picasso3;
-
-import android.graphics.Bitmap;
-import android.net.NetworkInfo;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import java.io.IOException;
-import okhttp3.CacheControl;
+import javax.annotation.Nullable;import okhttp3.CacheControl;
 import okhttp3.Call;
 import okhttp3.Response;
 import okhttp3.ResponseBody;

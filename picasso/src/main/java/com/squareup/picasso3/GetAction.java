@@ -14,12 +14,7 @@
  * limitations under the License.
  */
 package com.squareup.picasso3;
-
-class GetAction extends Action<Void> {
-  GetAction(Picasso picasso, Request data) {
-    super(picasso, null, data);
-  }
-
+import javax.annotation.Nullable;
   @Override void complete(RequestHandler.Result result) {
   }
 

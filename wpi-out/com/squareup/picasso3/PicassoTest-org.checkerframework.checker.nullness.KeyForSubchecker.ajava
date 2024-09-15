@@ -316,6 +316,7 @@ public final class PicassoTest {
         }
     }
 
+    // This test fails on 23 so restore the default level.
     @org.checkerframework.dataflow.qual.Impure
     public void cancelExistingRequestWithRemoteViewTarget() {
         int layoutId = 0;

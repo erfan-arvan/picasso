@@ -14,12 +14,7 @@
  * limitations under the License.
  */
 package com.squareup.picasso3;
-
-import android.graphics.Bitmap;
-
-class TestTransformation implements Transformation {
-  private final String key;
-  private final Bitmap result;
+import javax.annotation.Nullable;  private final Bitmap result;
 
   TestTransformation(String key) {
     this(key, Bitmap.createBitmap(10, 10, null));

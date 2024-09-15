@@ -14,12 +14,7 @@
  * limitations under the License.
  */
 package com.squareup.picasso3;
-
-import android.support.annotation.VisibleForTesting;
-import android.view.View;
-import android.view.View.OnAttachStateChangeListener;
-import android.view.ViewTreeObserver;
-import android.view.ViewTreeObserver.OnPreDrawListener;
+import javax.annotation.Nullable;import android.view.ViewTreeObserver.OnPreDrawListener;
 import android.widget.ImageView;
 
 class DeferredRequestCreator implements OnPreDrawListener, OnAttachStateChangeListener {

@@ -1,10 +1,5 @@
 package com.squareup.picasso3;
-
-import android.support.annotation.NonNull;
-import java.io.IOException;
-import java.io.InputStream;
-import okio.Buffer;
-import okio.BufferedSource;
+import javax.annotation.Nullable;import okio.BufferedSource;
 import okio.Okio;
 import okio.Source;
 import okio.Timeout;

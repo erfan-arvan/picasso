@@ -14,12 +14,7 @@
  * limitations under the License.
  */
 package com.squareup.picasso3;
-
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.net.Uri;
-import android.widget.ImageView;
-import android.widget.RemoteViews;
+import javax.annotation.Nullable;import android.widget.RemoteViews;
 import com.squareup.picasso3.Picasso.RequestTransformer;
 import java.io.File;
 import java.util.Arrays;

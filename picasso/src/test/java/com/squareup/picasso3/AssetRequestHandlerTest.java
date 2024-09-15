@@ -1,10 +1,5 @@
 package com.squareup.picasso3;
-
-import android.content.Context;
-import android.net.Uri;
-import java.io.IOException;
-import org.junit.Before;
-import org.junit.Test;
+import javax.annotation.Nullable;import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.robolectric.RobolectricTestRunner;

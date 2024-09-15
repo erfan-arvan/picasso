@@ -1,10 +1,5 @@
 package com.squareup.picasso3.pollexor;
-
-import android.net.Uri;
-import com.squareup.picasso3.Request;
-import com.squareup.pollexor.Thumbor;
-import com.squareup.pollexor.ThumborUrlBuilder.ImageFormat;
-import org.junit.Test;
+import javax.annotation.Nullable;import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;

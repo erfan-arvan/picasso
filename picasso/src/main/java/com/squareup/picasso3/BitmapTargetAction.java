@@ -14,12 +14,7 @@
  * limitations under the License.
  */
 package com.squareup.picasso3;
-
-import android.graphics.Bitmap;
-import android.support.v4.content.ContextCompat;
-
-final class BitmapTargetAction extends Action<BitmapTarget> {
-
+import javax.annotation.Nullable;
   BitmapTargetAction(Picasso picasso, Target<BitmapTarget> wrapper, Request data) {
     super(picasso, wrapper, data);
   }

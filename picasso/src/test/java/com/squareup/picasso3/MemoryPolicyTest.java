@@ -1,10 +1,5 @@
 package com.squareup.picasso3;
-
-import org.junit.Test;
-
-import static com.google.common.truth.Truth.assertThat;
-
-public class MemoryPolicyTest {
+import javax.annotation.Nullable;public class MemoryPolicyTest {
 
   @Test public void dontReadFromMemoryCache() {
     int memoryPolicy = 0;

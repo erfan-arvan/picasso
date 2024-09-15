@@ -14,12 +14,7 @@
  * limitations under the License.
  */
 package com.squareup.picasso3;
-
-import android.graphics.drawable.Drawable;
-import android.support.annotation.DrawableRes;
-import android.support.annotation.NonNull;
-
-public class Target<T> {
+import javax.annotation.Nullable;public class Target<T> {
   final T target;
   final Drawable errorDrawable;
   final int errorResId;

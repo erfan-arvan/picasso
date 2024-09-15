@@ -14,12 +14,7 @@
  * limitations under the License.
  */
 package com.squareup.picasso3;
-
-import android.content.Context;
-import android.graphics.drawable.Animatable;
-import android.graphics.drawable.Drawable;
-import android.widget.ImageView;
-
+import javax.annotation.Nullable;
 class ImageViewAction extends Action<ImageView> {
 
   Callback callback;

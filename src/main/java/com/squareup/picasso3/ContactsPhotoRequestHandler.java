@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 package com.squareup.picasso3;
-
+import javax.annotation.Nullable;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.UriMatcher;
@@ -26,90 +26,98 @@ import java.io.IOException;
 import java.io.InputStream;
 import okio.Okio;
 import okio.Source;
-
 import static android.content.ContentResolver.SCHEME_CONTENT;
 import static android.provider.ContactsContract.Contacts.openContactPhotoInputStream;
 import static com.squareup.picasso3.Picasso.LoadedFrom.DISK;
 
 class ContactsPhotoRequestHandler extends RequestHandler {
-  /** A lookup uri (e.g. content://com.android.contacts/contacts/lookup/3570i61d948d30808e537) */
-  private static final int ID_LOOKUP = 1;
-  /** A contact thumbnail uri (e.g. content://com.android.contacts/contacts/38/photo) */
-  private static final int ID_THUMBNAIL = 2;
-  /** A contact uri (e.g. content://com.android.contacts/contacts/38) */
-  private static final int ID_CONTACT = 3;
-  /**
-   * A contact display photo (high resolution) uri
-   * (e.g. content://com.android.contacts/display_photo/5)
-   */
-  private static final int ID_DISPLAY_PHOTO = 4;
 
-  private static final UriMatcher matcher;
+    /**
+     * A lookup uri (e.g. content://com.android.contacts/contacts/lookup/3570i61d948d30808e537)
+     */
+    private static final int ID_LOOKUP = 1;
 
-  static {
-    matcher = new UriMatcher(UriMatcher.NO_MATCH);
-    matcher.addURI(ContactsContract.AUTHORITY, "contacts/lookup/*/#", ID_LOOKUP);
-    matcher.addURI(ContactsContract.AUTHORITY, "contacts/lookup/*", ID_LOOKUP);
-    matcher.addURI(ContactsContract.AUTHORITY, "contacts/#/photo", ID_THUMBNAIL);
-    matcher.addURI(ContactsContract.AUTHORITY, "contacts/#", ID_CONTACT);
-    matcher.addURI(ContactsContract.AUTHORITY, "display_photo/#", ID_DISPLAY_PHOTO);
-  }
+    /**
+     * A contact thumbnail uri (e.g. content://com.android.contacts/contacts/38/photo)
+     */
+    private static final int ID_THUMBNAIL = 2;
 
-  private final Context context;
+    /**
+     * A contact uri (e.g. content://com.android.contacts/contacts/38)
+     */
+    private static final int ID_CONTACT = 3;
 
-  ContactsPhotoRequestHandler(Context context) {
-    this.context = context;
-  }
+    /**
+     * A contact display photo (high resolution) uri
+     * (e.g. content://com.android.contacts/display_photo/5)
+     */
+    private static final int ID_DISPLAY_PHOTO = 4;
 
-  @Override public boolean canHandleRequest( Request data) {
-    final Uri uri = data.uri;
-    return (SCHEME_CONTENT.equals(uri.getScheme())
-        && ContactsContract.Contacts.CONTENT_URI.getHost().equals(uri.getHost())
-        && matcher.match(data.uri) != UriMatcher.NO_MATCH);
-  }
+    private static final UriMatcher matcher;
 
-  @Override
-  public void load( Picasso picasso,  Request request,  Callback callback) {
-    boolean signaledCallback = false;
-    try {
-      Source source = getSource(request);
-      if (source == null) {
-        signaledCallback = true;
-        callback.onError(new IOException("no contact found"));
-        return;
-      }
-
-      Bitmap bitmap = decodeStream(source, request);
-      signaledCallback = true;
-      callback.onSuccess(new Result(bitmap, DISK));
-    } catch (Exception e) {
-      if (!signaledCallback) {
-        callback.onError(e);
-      }
+    static {
+        matcher = new UriMatcher(UriMatcher.NO_MATCH);
+        matcher.addURI(ContactsContract.AUTHORITY, "contacts/lookup/*/#", ID_LOOKUP);
+        matcher.addURI(ContactsContract.AUTHORITY, "contacts/lookup/*", ID_LOOKUP);
+        matcher.addURI(ContactsContract.AUTHORITY, "contacts/#/photo", ID_THUMBNAIL);
+        matcher.addURI(ContactsContract.AUTHORITY, "contacts/#", ID_CONTACT);
+        matcher.addURI(ContactsContract.AUTHORITY, "display_photo/#", ID_DISPLAY_PHOTO);
     }
-  }
 
-  private Source getSource(Request data) throws IOException {
-    ContentResolver contentResolver = context.getContentResolver();
-    Uri uri = data.uri;
-    InputStream is;
-    switch (matcher.match(uri)) {
-      case ID_LOOKUP:
-        uri = ContactsContract.Contacts.lookupContact(contentResolver, uri);
-        if (uri == null) {
-          return null;
+    private final Context context;
+
+    ContactsPhotoRequestHandler(Context context) {
+        this.context = context;
+    }
+
+    @Override
+    public boolean canHandleRequest(Request data) {
+        final Uri uri = data.uri;
+        return (SCHEME_CONTENT.equals(uri.getScheme()) && ContactsContract.Contacts.CONTENT_URI.getHost().equals(uri.getHost()) && matcher.match(data.uri) != UriMatcher.NO_MATCH);
+    }
+
+    @Override
+    public void load(@Nullable Picasso picasso, Request request, Callback callback) {
+        boolean signaledCallback = false;
+        try {
+            Source source = getSource(request);
+            if (source == null) {
+                signaledCallback = true;
+                callback.onError(new IOException("no contact found"));
+                return;
+            }
+            Bitmap bitmap = decodeStream(source, request);
+            signaledCallback = true;
+            callback.onSuccess(new Result(bitmap, DISK));
+        } catch (Exception e) {
+            if (!signaledCallback) {
+                callback.onError(e);
+            }
         }
-        // Resolved the uri to a contact uri, intentionally fall through to process the resolved uri
-      case ID_CONTACT:
-        is = openContactPhotoInputStream(contentResolver, uri, true);
-        break;
-      case ID_THUMBNAIL:
-      case ID_DISPLAY_PHOTO:
-        is = contentResolver.openInputStream(uri);
-        break;
-      default:
-        throw new IllegalStateException("Invalid uri: " + uri);
     }
-    return is == null ? null : Okio.source(is);
-  }
+
+    @Nullable
+    private Source getSource(Request data) throws IOException {
+        ContentResolver contentResolver = context.getContentResolver();
+        Uri uri = data.uri;
+        InputStream is;
+        switch(matcher.match(uri)) {
+            case ID_LOOKUP:
+                uri = ContactsContract.Contacts.lookupContact(contentResolver, uri);
+                if (uri == null) {
+                    return null;
+                }
+            // Resolved the uri to a contact uri, intentionally fall through to process the resolved uri
+            case ID_CONTACT:
+                is = openContactPhotoInputStream(contentResolver, uri, true);
+                break;
+            case ID_THUMBNAIL:
+            case ID_DISPLAY_PHOTO:
+                is = contentResolver.openInputStream(uri);
+                break;
+            default:
+                throw new IllegalStateException("Invalid uri: " + uri);
+        }
+        return is == null ? null : Okio.source(is);
+    }
 }

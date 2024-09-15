@@ -14,12 +14,7 @@
  * limitations under the License.
  */
 package com.squareup.picasso3;
-
-import android.content.res.Resources;
-import java.io.IOException;
-import okio.Buffer;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import javax.annotation.Nullable;import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 
 import static com.google.common.truth.Truth.assertThat;

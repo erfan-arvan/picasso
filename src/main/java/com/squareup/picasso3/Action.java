@@ -14,60 +14,64 @@
  * limitations under the License.
  */
 package com.squareup.picasso3;
-
+import javax.annotation.Nullable;
 import static com.squareup.picasso3.Picasso.Priority;
 
 abstract class Action<T> {
-  final Picasso picasso;
-  final Request request;
-  final Target<T> wrapper;
 
-  boolean willReplay;
-  boolean cancelled;
+    final Picasso picasso;
 
-  Action(Picasso picasso, Target<T> wrapper, Request request) {
-    this.picasso = picasso;
-    this.request = request;
-    this.wrapper = wrapper;
-  }
+    final Request request;
 
-  abstract void complete(RequestHandler.Result result);
+    final Target<T> wrapper;
 
-  abstract void error(Exception e);
+    boolean willReplay;
 
-  void cancel() {
-    cancelled = true;
-  }
+    boolean cancelled;
 
-  Request getRequest() {
-    return request;
-  }
+    Action(Picasso picasso, Target<T> wrapper, Request request) {
+        this.picasso = picasso;
+        this.request = request;
+        this.wrapper = wrapper;
+    }
 
-  T getTarget() {
-    return wrapper.target;
-  }
+    abstract void complete(@Nullable RequestHandler.Result result);
 
-  String getKey() {
-    return request.key;
-  }
+    abstract void error(@Nullable Exception e);
 
-  boolean isCancelled() {
-    return cancelled;
-  }
+    void cancel() {
+        cancelled = true;
+    }
 
-  boolean willReplay() {
-    return willReplay;
-  }
+    Request getRequest() {
+        return request;
+    }
 
-  Picasso getPicasso() {
-    return picasso;
-  }
+    T getTarget() {
+        return wrapper.target;
+    }
 
-  Priority getPriority() {
-    return request.priority;
-  }
+    String getKey() {
+        return request.key;
+    }
 
-  Object getTag() {
-    return request.tag != null ? request.tag : this;
-  }
+    boolean isCancelled() {
+        return cancelled;
+    }
+
+    boolean willReplay() {
+        return willReplay;
+    }
+
+    Picasso getPicasso() {
+        return picasso;
+    }
+
+    Priority getPriority() {
+        return request.priority;
+    }
+
+    Object getTag() {
+        return request.tag != null ? request.tag : this;
+    }
 }

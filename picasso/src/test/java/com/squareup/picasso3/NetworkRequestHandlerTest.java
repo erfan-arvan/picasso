@@ -14,12 +14,7 @@
  * limitations under the License.
  */
 package com.squareup.picasso3;
-
-import android.net.NetworkInfo;
-import android.support.annotation.NonNull;
-import com.squareup.picasso3.RequestHandler.Result;
-import com.squareup.picasso3.TestUtils.PremadeCall;
-import java.util.concurrent.BlockingDeque;
+import javax.annotation.Nullable;import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.atomic.AtomicBoolean;

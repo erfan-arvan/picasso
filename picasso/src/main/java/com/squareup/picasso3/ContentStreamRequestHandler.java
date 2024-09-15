@@ -14,12 +14,7 @@
  * limitations under the License.
  */
 package com.squareup.picasso3;
-
-import android.content.ContentResolver;
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.support.annotation.NonNull;
-import android.support.media.ExifInterface;
+import javax.annotation.Nullable;import android.support.media.ExifInterface;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;

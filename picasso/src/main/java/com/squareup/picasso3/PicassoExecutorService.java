@@ -14,12 +14,7 @@
  * limitations under the License.
  */
 package com.squareup.picasso3;
-
-import java.util.concurrent.Future;
-import java.util.concurrent.FutureTask;
-import java.util.concurrent.PriorityBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import javax.annotation.Nullable;import java.util.concurrent.TimeUnit;
 
 /**
  * The default {@link java.util.concurrent.ExecutorService} used for new {@link Picasso} instances.

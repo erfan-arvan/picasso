@@ -1,10 +1,5 @@
 package com.squareup.picasso3;
-
-import android.content.ContentResolver;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.provider.MediaStore;
-import org.robolectric.annotation.Implementation;
+import javax.annotation.Nullable;import org.robolectric.annotation.Implementation;
 import org.robolectric.annotation.Implements;
 
 import static com.squareup.picasso3.TestUtils.makeBitmap;

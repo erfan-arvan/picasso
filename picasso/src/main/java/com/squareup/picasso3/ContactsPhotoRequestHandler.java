@@ -14,12 +14,7 @@
  * limitations under the License.
  */
 package com.squareup.picasso3;
-
-import android.content.ContentResolver;
-import android.content.Context;
-import android.content.UriMatcher;
-import android.graphics.Bitmap;
-import android.net.Uri;
+import javax.annotation.Nullable;import android.net.Uri;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import java.io.IOException;

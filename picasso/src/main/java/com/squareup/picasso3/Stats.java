@@ -14,12 +14,7 @@
  * limitations under the License.
  */
 package com.squareup.picasso3;
-
-import android.graphics.Bitmap;
-import android.os.Handler;
-import android.os.HandlerThread;
-import android.os.Looper;
-import android.os.Message;
+import javax.annotation.Nullable;import android.os.Message;
 import android.support.v4.graphics.BitmapCompat;
 
 import static android.os.Process.THREAD_PRIORITY_BACKGROUND;

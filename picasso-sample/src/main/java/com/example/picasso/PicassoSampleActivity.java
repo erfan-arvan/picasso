@@ -1,10 +1,5 @@
 package com.example.picasso;
-
-import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
+import javax.annotation.Nullable;import android.widget.AdapterView;
 import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.ListView;

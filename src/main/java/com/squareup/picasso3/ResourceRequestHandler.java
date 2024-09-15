@@ -14,39 +14,40 @@
  * limitations under the License.
  */
 package com.squareup.picasso3;
-
+import javax.annotation.Nullable;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
-
 import static android.content.ContentResolver.SCHEME_ANDROID_RESOURCE;
 import static com.squareup.picasso3.Picasso.LoadedFrom.DISK;
 
 class ResourceRequestHandler extends RequestHandler {
-  private final Context context;
 
-  ResourceRequestHandler(Context context) {
-    this.context = context;
-  }
+    private final Context context;
 
-  @Override public boolean canHandleRequest( Request data) {
-    if (data.resourceId != 0 && !isXmlResource(context.getResources(), data.resourceId)) {
-      return true;
+    ResourceRequestHandler(Context context) {
+        this.context = context;
     }
-    return data.uri != null && SCHEME_ANDROID_RESOURCE.equals(data.uri.getScheme());
-  }
 
-  @Override
-  public void load( Picasso picasso,  Request request,  Callback callback) {
-    boolean signaledCallback = false;
-    try {
-      Bitmap bitmap = decodeResource(context, request);
-      signaledCallback = true;
-      callback.onSuccess(new Result(bitmap, DISK));
-    } catch (Exception e) {
-      if (!signaledCallback) {
-        callback.onError(e);
-      }
+    @Override
+    public boolean canHandleRequest(Request data) {
+        if (data.resourceId != 0 && !isXmlResource(context.getResources(), data.resourceId)) {
+            return true;
+        }
+        return data.uri != null && SCHEME_ANDROID_RESOURCE.equals(data.uri.getScheme());
     }
-  }
+
+    @Override
+    public void load(@Nullable Picasso picasso, Request request, Callback callback) {
+        boolean signaledCallback = false;
+        try {
+            Bitmap bitmap = decodeResource(context, request);
+            signaledCallback = true;
+            callback.onSuccess(new Result(bitmap, DISK));
+        } catch (Exception e) {
+            if (!signaledCallback) {
+                callback.onError(e);
+            }
+        }
+    }
 }

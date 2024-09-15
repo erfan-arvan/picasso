@@ -14,12 +14,7 @@
  * limitations under the License.
  */
 package com.squareup.picasso3;
-
-import android.support.annotation.NonNull;
-import java.io.IOException;
-import java.io.InputStream;
-import okio.Buffer;
-import okio.BufferedSource;
+import javax.annotation.Nullable;import okio.BufferedSource;
 
 /**
  * An {@link InputStream} that fills the buffer of an {@link BufferedSource} as reads are requested

@@ -1,10 +1,5 @@
 package com.example.picasso;
-
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.ViewAnimator;
+import javax.annotation.Nullable;import android.widget.ViewAnimator;
 import com.squareup.picasso3.provider.PicassoProvider;
 
 import static android.content.Intent.ACTION_PICK;

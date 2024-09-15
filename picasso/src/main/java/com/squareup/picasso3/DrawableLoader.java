@@ -14,11 +14,5 @@
  * limitations under the License.
  */
 package com.squareup.picasso3;
-
-import android.graphics.drawable.Drawable;
-import android.support.annotation.DrawableRes;
-import android.support.annotation.Nullable;
-
-public interface DrawableLoader {
-  @Nullable Drawable load(@DrawableRes int resId);
+import javax.annotation.Nullable;  @Nullable Drawable load(@DrawableRes int resId);
 }

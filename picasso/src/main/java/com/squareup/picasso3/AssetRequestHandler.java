@@ -14,12 +14,7 @@
  * limitations under the License.
  */
 package com.squareup.picasso3;
-
-import android.content.Context;
-import android.content.res.AssetManager;
-import android.graphics.Bitmap;
-import android.net.Uri;
-import android.support.annotation.NonNull;
+import javax.annotation.Nullable;import android.support.annotation.NonNull;
 import java.io.IOException;
 import okio.Okio;
 import okio.Source;

@@ -14,12 +14,7 @@
  * limitations under the License.
  */
 package com.squareup.picasso3;
-
-import static com.squareup.picasso3.Picasso.Priority;
-
-abstract class Action<T> {
-  final Picasso picasso;
-  final Request request;
+import javax.annotation.Nullable;  final Request request;
   final Target<T> wrapper;
 
   boolean willReplay;

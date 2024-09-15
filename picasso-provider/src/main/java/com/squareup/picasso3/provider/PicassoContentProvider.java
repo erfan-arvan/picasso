@@ -1,10 +1,5 @@
 package com.squareup.picasso3.provider;
-
-import android.annotation.SuppressLint;
-import android.content.ContentProvider;
-import android.content.ContentValues;
-import android.content.Context;
-import android.database.Cursor;
+import javax.annotation.Nullable;import android.database.Cursor;
 import android.net.Uri;
 import android.support.annotation.RestrictTo;
 

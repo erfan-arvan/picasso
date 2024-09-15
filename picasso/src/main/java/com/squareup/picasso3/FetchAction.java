@@ -14,12 +14,7 @@
  * limitations under the License.
  */
 package com.squareup.picasso3;
-
-class FetchAction extends Action<Object> {
-
-  private final Object fetchTarget;
-  private Callback callback;
-
+import javax.annotation.Nullable;
   FetchAction(Picasso picasso, Request data, Callback callback) {
     super(picasso, null, data);
     this.fetchTarget = new Object();

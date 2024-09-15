@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 package com.squareup.picasso3;
-
+import javax.annotation.Nullable;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.support.media.ExifInterface;
 import java.io.IOException;
 import okio.Source;
-
 import static android.content.ContentResolver.SCHEME_FILE;
 import static android.support.media.ExifInterface.ORIENTATION_NORMAL;
 import static android.support.media.ExifInterface.TAG_ORIENTATION;
@@ -29,32 +28,34 @@ import static com.squareup.picasso3.Picasso.LoadedFrom.DISK;
 
 class FileRequestHandler extends ContentStreamRequestHandler {
 
-  FileRequestHandler(Context context) {
-    super(context);
-  }
-
-  @Override public boolean canHandleRequest( Request data) {
-    return SCHEME_FILE.equals(data.uri.getScheme());
-  }
-
-  @Override
-  public void load( Picasso picasso,  Request request,  Callback callback) {
-    boolean signaledCallback = false;
-    try {
-      Source source = getSource(request);
-      Bitmap bitmap = decodeStream(source, request);
-      int exifRotation = getExifOrientation(request);
-      signaledCallback = true;
-      callback.onSuccess(new Result(bitmap, DISK, exifRotation));
-    } catch (Exception e) {
-      if (!signaledCallback) {
-        callback.onError(e);
-      }
+    FileRequestHandler(Context context) {
+        super(context);
     }
-  }
 
-  @Override protected int getExifOrientation(Request request) throws IOException {
-    ExifInterface exifInterface = new ExifInterface(request.uri.getPath());
-    return exifInterface.getAttributeInt(TAG_ORIENTATION, ORIENTATION_NORMAL);
-  }
+    @Override
+    public boolean canHandleRequest(Request data) {
+        return SCHEME_FILE.equals(data.uri.getScheme());
+    }
+
+    @Override
+    public void load(@Nullable Picasso picasso, Request request, Callback callback) {
+        boolean signaledCallback = false;
+        try {
+            Source source = getSource(request);
+            Bitmap bitmap = decodeStream(source, request);
+            int exifRotation = getExifOrientation(request);
+            signaledCallback = true;
+            callback.onSuccess(new Result(bitmap, DISK, exifRotation));
+        } catch (Exception e) {
+            if (!signaledCallback) {
+                callback.onError(e);
+            }
+        }
+    }
+
+    @Override
+    protected int getExifOrientation(Request request) throws IOException {
+        ExifInterface exifInterface = new ExifInterface(request.uri.getPath());
+        return exifInterface.getAttributeInt(TAG_ORIENTATION, ORIENTATION_NORMAL);
+    }
 }

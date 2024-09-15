@@ -14,12 +14,7 @@
  * limitations under the License.
  */
 package com.example.picasso;
-
-import android.appwidget.AppWidgetManager;
-import android.appwidget.AppWidgetProvider;
-import android.content.Context;
-import android.widget.RemoteViews;
-import com.squareup.picasso3.Picasso;
+import javax.annotation.Nullable;import com.squareup.picasso3.Picasso;
 import com.squareup.picasso3.provider.PicassoProvider;
 import java.util.Random;
 

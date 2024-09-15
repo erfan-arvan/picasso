@@ -14,12 +14,7 @@
  * limitations under the License.
  */
 package com.squareup.picasso3;
-
-import android.support.annotation.NonNull;
-
-/** Image transformation. */
-public interface Transformation {
-  /**
+import javax.annotation.Nullable;  /**
    * Transform the source result into a new result. If you create a new bitmap instance, you must
    * call {@link android.graphics.Bitmap#recycle()} on {@code source}. You may return the original
    * if no transformation is required.
