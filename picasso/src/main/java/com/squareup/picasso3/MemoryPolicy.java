@@ -14,10 +14,7 @@
  * limitations under the License.
  */
 package com.squareup.picasso3;
-
-/** Designates the policy to use when dealing with memory cache. */
-@SuppressWarnings("PointlessBitwiseExpression")
-public enum MemoryPolicy {
+import javax.annotation.Nullable;public enum MemoryPolicy {
 
   /** Skips memory cache lookup when processing a request. */
   NO_CACHE(1 << 0),

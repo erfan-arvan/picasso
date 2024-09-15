@@ -14,10 +14,7 @@
  * limitations under the License.
  */
 package com.squareup.picasso3;
-
-import android.content.Context;
-import android.content.Intent;
-import android.graphics.Bitmap;
+import javax.annotation.Nullable;import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Handler;

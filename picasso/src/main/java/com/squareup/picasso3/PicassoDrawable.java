@@ -14,10 +14,7 @@
  * limitations under the License.
  */
 package com.squareup.picasso3;
-
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
+import javax.annotation.Nullable;import android.graphics.Canvas;
 import android.graphics.ColorFilter;
 import android.graphics.Paint;
 import android.graphics.Path;
@@ -26,7 +23,6 @@ import android.graphics.drawable.Animatable;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.SystemClock;
-import android.support.annotation.Nullable;
 import android.widget.ImageView;
 
 import static android.graphics.Color.WHITE;

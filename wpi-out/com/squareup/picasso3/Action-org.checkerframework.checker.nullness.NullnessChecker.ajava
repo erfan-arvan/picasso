@@ -15,7 +15,7 @@
  */
 package com.squareup.picasso3;
 
-import android.support.annotation.Nullable;
+import javax.annotation.Nullable;
 import static com.squareup.picasso3.Picasso.Priority;
 import static com.squareup.picasso3.Utils.checkNotNull;
 

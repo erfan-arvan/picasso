@@ -14,10 +14,7 @@
  * limitations under the License.
  */
 package com.squareup.picasso3;
-
-import android.graphics.Bitmap;
-import android.graphics.Matrix;
-import android.support.annotation.NonNull;
+import javax.annotation.Nullable;import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 import android.view.Gravity;
 

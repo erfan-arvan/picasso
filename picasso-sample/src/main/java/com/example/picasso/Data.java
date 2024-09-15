@@ -1,8 +1,5 @@
 package com.example.picasso;
-
-final class Data {
-  static final String BASE = "https://i.imgur.com/";
-  static final String EXT = ".jpg";
+import javax.annotation.Nullable;  static final String EXT = ".jpg";
   static final String[] URLS = {
       BASE + "CqmBjo5" + EXT, BASE + "zkaAooq" + EXT, BASE + "0gqnEaY" + EXT,
       BASE + "9gbQ7YR" + EXT, BASE + "aFhEEby" + EXT, BASE + "0E2tgV7" + EXT,

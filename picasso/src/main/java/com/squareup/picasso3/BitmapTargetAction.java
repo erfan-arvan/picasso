@@ -14,10 +14,7 @@
  * limitations under the License.
  */
 package com.squareup.picasso3;
-
-import android.graphics.Bitmap;
-import android.support.v4.content.ContextCompat;
-
+import javax.annotation.Nullable;
 import static com.squareup.picasso3.Utils.checkNotNull;
 
 final class BitmapTargetAction extends Action<BitmapTarget> {

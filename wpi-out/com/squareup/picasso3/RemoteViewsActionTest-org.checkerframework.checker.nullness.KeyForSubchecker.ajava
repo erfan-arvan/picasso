@@ -15,6 +15,7 @@
  */
 package com.squareup.picasso3;
 
+import javax.annotation.Nullable;
 import android.graphics.Bitmap;
 import android.widget.ImageView;
 import android.widget.RemoteViews;
@@ -38,6 +39,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
+//
 @org.checkerframework.framework.qual.AnnotatedFor("org.checkerframework.checker.nullness.KeyForSubchecker")
 public class RemoteViewsActionTest {
 

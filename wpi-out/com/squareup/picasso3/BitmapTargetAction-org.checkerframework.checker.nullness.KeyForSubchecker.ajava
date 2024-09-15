@@ -15,6 +15,7 @@
  */
 package com.squareup.picasso3;
 
+import javax.annotation.Nullable;
 import android.graphics.Bitmap;
 import android.support.v4.content.ContextCompat;
 import static com.squareup.picasso3.Utils.checkNotNull;

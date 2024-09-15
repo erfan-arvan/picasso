@@ -14,21 +14,24 @@
  * limitations under the License.
  */
 package com.squareup.picasso3;
-
+import javax.annotation.Nullable;
 import android.support.annotation.NonNull;
 
-/** Image transformation. */
+/**
+ * Image transformation.
+ */
 public interface Transformation {
-  /**
-   * Transform the source result into a new result. If you create a new bitmap instance, you must
-   * call {@link android.graphics.Bitmap#recycle()} on {@code source}. You may return the original
-   * if no transformation is required.
-   */
-   RequestHandler.Result transform( RequestHandler.Result source);
 
-  /**
-   * Returns a unique key for the transformation, used for caching purposes. If the transformation
-   * has parameters (e.g. size, scale factor, etc) then these should be part of the key.
-   */
-   String key();
+    /**
+     * Transform the source result into a new result. If you create a new bitmap instance, you must
+     * call {@link android.graphics.Bitmap#recycle()} on {@code source}. You may return the original
+     * if no transformation is required.
+     */
+    RequestHandler.Result transform(@Nullable RequestHandler.Result source);
+
+    /**
+     * Returns a unique key for the transformation, used for caching purposes. If the transformation
+     * has parameters (e.g. size, scale factor, etc) then these should be part of the key.
+     */
+    String key();
 }

@@ -14,38 +14,43 @@
  * limitations under the License.
  */
 package com.squareup.picasso3;
-
-import android.support.annotation.Nullable;
+import javax.annotation.Nullable;
 
 class FetchAction extends Action<Object> {
 
-  private final Object fetchTarget;
-   private Callback callback;
+    private final Object fetchTarget;
 
-  FetchAction(Picasso picasso, Request data,  Callback callback) {
-    super(picasso, null, data);
-    this.fetchTarget = new Object();
-    this.callback = callback;
-  }
+    @Nullable
+    private Callback callback;
 
-  @Override void complete(RequestHandler.Result result) {
-    if (callback != null) {
-      callback.onSuccess();
+    FetchAction(Picasso picasso, Request data, Callback callback) {
+        super(picasso, null, data);
+        this.fetchTarget = new Object();
+        this.callback = callback;
     }
-  }
 
-  @Override void error(Exception e) {
-    if (callback != null) {
-      callback.onError(e);
+    @Override
+    void complete(@Nullable RequestHandler.Result result) {
+        if (callback != null) {
+            callback.onSuccess();
+        }
     }
-  }
 
-  @Override void cancel() {
-    super.cancel();
-    callback = null;
-  }
+    @Override
+    void error(Exception e) {
+        if (callback != null) {
+            callback.onError(e);
+        }
+    }
 
-  @Override Object getTarget() {
-    return fetchTarget;
-  }
+    @Override
+    void cancel() {
+        super.cancel();
+        callback = null;
+    }
+
+    @Override
+    Object getTarget() {
+        return fetchTarget;
+    }
 }

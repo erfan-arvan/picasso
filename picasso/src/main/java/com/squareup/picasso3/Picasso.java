@@ -14,10 +14,7 @@
  * limitations under the License.
  */
 package com.squareup.picasso3;
-
-import android.arch.lifecycle.Lifecycle;
-import android.arch.lifecycle.LifecycleObserver;
-import android.arch.lifecycle.OnLifecycleEvent;
+import javax.annotation.Nullable;import android.arch.lifecycle.OnLifecycleEvent;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -28,7 +25,6 @@ import android.os.Message;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.widget.ImageView;
 import android.widget.RemoteViews;
 import java.io.File;

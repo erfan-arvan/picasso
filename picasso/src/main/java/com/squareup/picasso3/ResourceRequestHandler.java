@@ -14,10 +14,7 @@
  * limitations under the License.
  */
 package com.squareup.picasso3;
-
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.support.annotation.NonNull;
+import javax.annotation.Nullable;import android.support.annotation.NonNull;
 
 import static android.content.ContentResolver.SCHEME_ANDROID_RESOURCE;
 import static com.squareup.picasso3.Picasso.LoadedFrom.DISK;

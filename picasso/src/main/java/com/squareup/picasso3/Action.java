@@ -14,11 +14,7 @@
  * limitations under the License.
  */
 package com.squareup.picasso3;
-
-import android.support.annotation.Nullable;
-
-import static com.squareup.picasso3.Picasso.Priority;
-import static com.squareup.picasso3.Utils.checkNotNull;
+import javax.annotation.Nullable;import static com.squareup.picasso3.Utils.checkNotNull;
 
 abstract class Action<T> {
   final Picasso picasso;

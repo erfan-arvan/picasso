@@ -15,6 +15,7 @@
  */
 package com.squareup.picasso3;
 
+import javax.annotation.Nullable;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import org.junit.Before;

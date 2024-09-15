@@ -14,10 +14,7 @@
  * limitations under the License.
  */
 package com.example.picasso;
-
-import android.graphics.Bitmap;
-import android.graphics.BitmapShader;
-import android.graphics.Canvas;
+import javax.annotation.Nullable;import android.graphics.Canvas;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Paint;

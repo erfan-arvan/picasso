@@ -15,6 +15,8 @@
  */
 package com.squareup.picasso3;
 
+import javax.annotation.Nullable;
+
 @org.checkerframework.framework.qual.AnnotatedFor("org.checkerframework.checker.nullness.NullnessChecker")
 class GetAction extends Action<Void> {
 

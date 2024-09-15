@@ -15,6 +15,7 @@
  */
 package com.squareup.picasso3;
 
+import javax.annotation.Nullable;
 import android.net.NetworkInfo;
 import android.support.annotation.NonNull;
 import com.squareup.picasso3.RequestHandler.Result;

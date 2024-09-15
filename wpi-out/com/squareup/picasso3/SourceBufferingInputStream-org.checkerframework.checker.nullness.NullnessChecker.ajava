@@ -15,6 +15,7 @@
  */
 package com.squareup.picasso3;
 
+import javax.annotation.Nullable;
 import android.support.annotation.NonNull;
 import java.io.IOException;
 import java.io.InputStream;

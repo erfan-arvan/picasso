@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 package com.squareup.picasso3;
-
+import javax.annotation.Nullable;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
@@ -23,7 +23,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
-
 import static android.graphics.Color.RED;
 import static com.google.common.truth.Truth.assertThat;
 import static com.squareup.picasso3.Picasso.LoadedFrom.DISK;
@@ -32,28 +31,34 @@ import static com.squareup.picasso3.TestUtils.makeBitmap;
 
 @RunWith(RobolectricTestRunner.class)
 public class PicassoDrawableTest {
-  private final Context context = RuntimeEnvironment.application;
-  private final Drawable placeholder = new ColorDrawable(RED);
-  private final Bitmap bitmap = makeBitmap();
-  
-  @Test public void createWithNoPlaceholderAnimation() {
-    PicassoDrawable pd = new PicassoDrawable(context, bitmap, null, DISK, false, false);
-    assertThat(pd.getBitmap()).isSameAs(bitmap);
-    assertThat(pd.placeholder).isNull();
-    assertThat(pd.animating).isTrue();
-  }
 
-  @Test public void createWithPlaceholderAnimation() {
-    PicassoDrawable pd = new PicassoDrawable(context, bitmap, placeholder, DISK, false, false);
-    assertThat(pd.getBitmap()).isSameAs(bitmap);
-    assertThat(pd.placeholder).isSameAs(placeholder);
-    assertThat(pd.animating).isTrue();
-  }
+    private final Context context = RuntimeEnvironment.application;
 
-  @Test public void createWithBitmapCacheHit() {
-    PicassoDrawable pd = new PicassoDrawable(context, bitmap, placeholder, MEMORY, false, false);
-    assertThat(pd.getBitmap()).isSameAs(bitmap);
-    assertThat(pd.placeholder).isNull();
-    assertThat(pd.animating).isFalse();
-  }
+    private final Drawable placeholder = new ColorDrawable(RED);
+
+    private final Bitmap bitmap = makeBitmap();
+
+    @Test
+    public void createWithNoPlaceholderAnimation() {
+        PicassoDrawable pd = new PicassoDrawable(context, bitmap, null, DISK, false, false);
+        assertThat(pd.getBitmap()).isSameAs(bitmap);
+        assertThat(pd.placeholder).isNull();
+        assertThat(pd.animating).isTrue();
+    }
+
+    @Test
+    public void createWithPlaceholderAnimation() {
+        PicassoDrawable pd = new PicassoDrawable(context, bitmap, placeholder, DISK, false, false);
+        assertThat(pd.getBitmap()).isSameAs(bitmap);
+        assertThat(pd.placeholder).isSameAs(placeholder);
+        assertThat(pd.animating).isTrue();
+    }
+
+    @Test
+    public void createWithBitmapCacheHit() {
+        PicassoDrawable pd = new PicassoDrawable(context, bitmap, placeholder, MEMORY, false, false);
+        assertThat(pd.getBitmap()).isSameAs(bitmap);
+        assertThat(pd.placeholder).isNull();
+        assertThat(pd.animating).isFalse();
+    }
 }

@@ -1,8 +1,5 @@
 package com.squareup.picasso3.provider;
-
-import android.annotation.SuppressLint;
-import android.content.Context;
-import com.squareup.picasso3.Initializer;
+import javax.annotation.Nullable;import com.squareup.picasso3.Initializer;
 import com.squareup.picasso3.Picasso;
 
 /**

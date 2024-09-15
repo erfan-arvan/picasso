@@ -14,10 +14,7 @@
  * limitations under the License.
  */
 package com.squareup.picasso3;
-
-import android.graphics.Bitmap;
-import android.graphics.drawable.AnimationDrawable;
-import android.graphics.drawable.Drawable;
+import javax.annotation.Nullable;import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
 import org.junit.Test;
 import org.junit.runner.RunWith;

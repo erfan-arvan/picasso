@@ -14,10 +14,7 @@
  * limitations under the License.
  */
 package com.squareup.picasso3;
-
-import android.view.ViewTreeObserver;
-import android.widget.ImageView;
-import org.junit.Before;
+import javax.annotation.Nullable;import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;

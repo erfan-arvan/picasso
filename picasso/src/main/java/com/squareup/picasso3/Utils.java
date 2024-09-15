@@ -14,10 +14,7 @@
  * limitations under the License.
  */
 package com.squareup.picasso3;
-
-import android.app.ActivityManager;
-import android.content.ContentResolver;
-import android.content.Context;
+import javax.annotation.Nullable;import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.os.Handler;
@@ -27,7 +24,6 @@ import android.os.Process;
 import android.os.StatFs;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import java.io.File;

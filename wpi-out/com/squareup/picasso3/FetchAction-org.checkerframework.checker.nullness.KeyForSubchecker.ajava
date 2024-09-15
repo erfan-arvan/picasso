@@ -15,7 +15,7 @@
  */
 package com.squareup.picasso3;
 
-import android.support.annotation.Nullable;
+import javax.annotation.Nullable;
 
 @org.checkerframework.framework.qual.AnnotatedFor("org.checkerframework.checker.nullness.KeyForSubchecker")
 class FetchAction extends Action<Object> {

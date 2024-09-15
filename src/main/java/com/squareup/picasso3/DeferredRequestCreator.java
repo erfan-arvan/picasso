@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 package com.squareup.picasso3;
-
-import android.support.annotation.Nullable;
+import javax.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 import android.view.View;
 import android.view.View.OnAttachStateChangeListener;
@@ -24,67 +23,66 @@ import android.view.ViewTreeObserver.OnPreDrawListener;
 import android.widget.ImageView;
 
 class DeferredRequestCreator implements OnPreDrawListener, OnAttachStateChangeListener {
-  private final RequestCreator creator;
-  @VisibleForTesting final ImageView target;
-  @VisibleForTesting  Callback callback;
 
-  DeferredRequestCreator(RequestCreator creator, ImageView target,  Callback callback) {
-    this.creator = creator;
-    this.target = target;
-    this.callback = callback;
+    private final RequestCreator creator;
 
-    target.addOnAttachStateChangeListener(this);
+    @VisibleForTesting
+    final ImageView target;
 
-    // Only add the pre-draw listener if the view is already attached.
-    // See: https://github.com/square/picasso/issues/1321
-    if (target.getWindowToken() != null) {
-      onViewAttachedToWindow(target);
-    }
-  }
+    @VisibleForTesting
+    Callback callback;
 
-  @Override public void onViewAttachedToWindow(View view) {
-    view.getViewTreeObserver().addOnPreDrawListener(this);
-  }
-
-  @Override public void onViewDetachedFromWindow(View view) {
-    view.getViewTreeObserver().removeOnPreDrawListener(this);
-  }
-
-  @Override public boolean onPreDraw() {
-    ImageView target = this.target;
-
-    ViewTreeObserver vto = target.getViewTreeObserver();
-    if (!vto.isAlive()) {
-      return true;
+    DeferredRequestCreator(RequestCreator creator, ImageView target, Callback callback) {
+        this.creator = creator;
+        this.target = target;
+        this.callback = callback;
+        target.addOnAttachStateChangeListener(this);
+        // Only add the pre-draw listener if the view is already attached.
+        // See: https://github.com/square/picasso/issues/1321
+        if (target.getWindowToken() != null) {
+            onViewAttachedToWindow(target);
+        }
     }
 
-    int width = target.getWidth();
-    int height = target.getHeight();
-
-    if (width <= 0 || height <= 0) {
-      return true;
+    @Override
+    public void onViewAttachedToWindow(View view) {
+        view.getViewTreeObserver().addOnPreDrawListener(this);
     }
 
-    target.removeOnAttachStateChangeListener(this);
-    vto.removeOnPreDrawListener(this);
-
-    this.creator.unfit().resize(width, height).into(target, callback);
-    return true;
-  }
-
-  void cancel() {
-    creator.clearTag();
-    callback = null;
-
-    target.removeOnAttachStateChangeListener(this);
-
-    ViewTreeObserver vto = target.getViewTreeObserver();
-    if (vto.isAlive()) {
-      vto.removeOnPreDrawListener(this);
+    @Override
+    public void onViewDetachedFromWindow(View view) {
+        view.getViewTreeObserver().removeOnPreDrawListener(this);
     }
-  }
 
-   Object getTag() {
-    return creator.getTag();
-  }
+    @Override
+    public boolean onPreDraw() {
+        ImageView target = this.target;
+        ViewTreeObserver vto = target.getViewTreeObserver();
+        if (!vto.isAlive()) {
+            return true;
+        }
+        int width = target.getWidth();
+        int height = target.getHeight();
+        if (width <= 0 || height <= 0) {
+            return true;
+        }
+        target.removeOnAttachStateChangeListener(this);
+        vto.removeOnPreDrawListener(this);
+        this.creator.unfit().resize(width, height).into(target, callback);
+        return true;
+    }
+
+    void cancel() {
+        creator.clearTag();
+        callback = null;
+        target.removeOnAttachStateChangeListener(this);
+        ViewTreeObserver vto = target.getViewTreeObserver();
+        if (vto.isAlive()) {
+            vto.removeOnPreDrawListener(this);
+        }
+    }
+
+    Object getTag() {
+        return creator.getTag();
+    }
 }

@@ -14,10 +14,7 @@
  * limitations under the License.
  */
 package com.squareup.picasso3;
-
-import android.Manifest;
-import android.annotation.SuppressLint;
-import android.content.BroadcastReceiver;
+import javax.annotation.Nullable;import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;

@@ -14,10 +14,7 @@
  * limitations under the License.
  */
 package com.squareup.picasso3;
-
-import android.support.annotation.RestrictTo;
-import java.lang.annotation.Retention;
-
+import javax.annotation.Nullable;
 import static android.support.annotation.RestrictTo.Scope.LIBRARY;
 import static java.lang.annotation.RetentionPolicy.SOURCE;
 

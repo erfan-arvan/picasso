@@ -14,11 +14,7 @@
  * limitations under the License.
  */
 package com.squareup.picasso3;
-
-import android.support.annotation.Nullable;
-
-class FetchAction extends Action<Object> {
-
+import javax.annotation.Nullable;
   private final Object fetchTarget;
   @Nullable private Callback callback;
 

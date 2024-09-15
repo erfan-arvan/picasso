@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 package com.squareup.picasso3;
-
+import javax.annotation.Nullable;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -23,7 +23,6 @@ import android.support.media.ExifInterface;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import okio.Source;
-
 import static android.content.ContentResolver.SCHEME_FILE;
 import static android.support.media.ExifInterface.ORIENTATION_NORMAL;
 import static android.support.media.ExifInterface.TAG_ORIENTATION;
@@ -32,38 +31,40 @@ import static com.squareup.picasso3.Utils.checkNotNull;
 
 class FileRequestHandler extends ContentStreamRequestHandler {
 
-  FileRequestHandler(Context context) {
-    super(context);
-  }
-
-  @Override public boolean canHandleRequest( Request data) {
-    Uri uri = data.uri;
-    return uri != null && SCHEME_FILE.equals(uri.getScheme());
-  }
-
-  @Override
-  public void load( Picasso picasso,  Request request,  Callback callback) {
-    boolean signaledCallback = false;
-    try {
-      Uri requestUri = checkNotNull(request.uri, "request.uri == null");
-      Source source = getSource(requestUri);
-      Bitmap bitmap = decodeStream(source, request);
-      int exifRotation = getExifOrientation(requestUri);
-      signaledCallback = true;
-      callback.onSuccess(new Result(bitmap, DISK, exifRotation));
-    } catch (Exception e) {
-      if (!signaledCallback) {
-        callback.onError(e);
-      }
+    FileRequestHandler(Context context) {
+        super(context);
     }
-  }
 
-  @Override protected int getExifOrientation(Uri uri) throws IOException {
-    String path = uri.getPath();
-    if (path == null) {
-      throw new FileNotFoundException("path == null, uri: " + uri);
+    @Override
+    public boolean canHandleRequest(Request data) {
+        Uri uri = data.uri;
+        return uri != null && SCHEME_FILE.equals(uri.getScheme());
     }
-    ExifInterface exifInterface = new ExifInterface(path);
-    return exifInterface.getAttributeInt(TAG_ORIENTATION, ORIENTATION_NORMAL);
-  }
+
+    @Override
+    public void load(@Nullable Picasso picasso, Request request, Callback callback) {
+        boolean signaledCallback = false;
+        try {
+            Uri requestUri = checkNotNull(request.uri, "request.uri == null");
+            Source source = getSource(requestUri);
+            Bitmap bitmap = decodeStream(source, request);
+            int exifRotation = getExifOrientation(requestUri);
+            signaledCallback = true;
+            callback.onSuccess(new Result(bitmap, DISK, exifRotation));
+        } catch (Exception e) {
+            if (!signaledCallback) {
+                callback.onError(e);
+            }
+        }
+    }
+
+    @Override
+    protected int getExifOrientation(Uri uri) throws IOException {
+        String path = uri.getPath();
+        if (path == null) {
+            throw new FileNotFoundException("path == null, uri: " + uri);
+        }
+        ExifInterface exifInterface = new ExifInterface(path);
+        return exifInterface.getAttributeInt(TAG_ORIENTATION, ORIENTATION_NORMAL);
+    }
 }

@@ -1,8 +1,5 @@
 package com.example.picasso;
-
-import android.os.Bundle;
-import android.widget.GridView;
-
+import javax.annotation.Nullable;
 public class SampleGridViewActivity extends PicassoSampleActivity {
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);

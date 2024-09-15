@@ -14,11 +14,7 @@
  * limitations under the License.
  */
 package com.squareup.picasso3;
-
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.appwidget.AppWidgetManager;
-import android.support.annotation.Nullable;
+import javax.annotation.Nullable;import android.appwidget.AppWidgetManager;
 import android.support.v4.content.ContextCompat;
 import android.widget.RemoteViews;
 

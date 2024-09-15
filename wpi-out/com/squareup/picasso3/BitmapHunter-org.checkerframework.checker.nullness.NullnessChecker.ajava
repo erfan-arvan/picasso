@@ -15,10 +15,10 @@
  */
 package com.squareup.picasso3;
 
+import javax.annotation.Nullable;
 import android.graphics.Bitmap;
 import android.net.NetworkInfo;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import com.squareup.picasso3.RequestHandler.Result;
 import java.io.IOException;
 import java.io.InterruptedIOException;
@@ -402,8 +402,9 @@ class BitmapHunter implements Runnable {
                 return null;
             }
             if (newResult == null) {
-                final StringBuilder builder = //
-                new StringBuilder().append("Transformation ").append(transformation.key()).append(" returned null after ").append(i).append(" previous transformation(s).\n\nTransformation list:\n");
+                final StringBuilder //
+                //
+                builder = new StringBuilder().append("Transformation ").append(transformation.key()).append(" returned null after ").append(i).append(" previous transformation(s).\n\nTransformation list:\n");
                 for (Transformation t : transformations) {
                     builder.append(t.key()).append('\n');
                 }

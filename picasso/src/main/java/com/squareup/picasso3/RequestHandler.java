@@ -14,10 +14,7 @@
  * limitations under the License.
  */
 package com.squareup.picasso3;
-
-import android.annotation.SuppressLint;
-import android.content.Context;
-import android.content.res.Resources;
+import javax.annotation.Nullable;import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.ImageDecoder;
@@ -26,7 +23,6 @@ import android.net.NetworkInfo;
 import android.os.Build;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.util.TypedValue;
 import java.io.IOException;

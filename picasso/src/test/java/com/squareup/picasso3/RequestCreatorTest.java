@@ -14,10 +14,7 @@
  * limitations under the License.
  */
 package com.squareup.picasso3;
-
-import android.app.Notification;
-import android.graphics.Bitmap;
-import android.graphics.drawable.ColorDrawable;
+import javax.annotation.Nullable;import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
 import android.widget.RemoteViews;

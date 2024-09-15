@@ -14,10 +14,7 @@
  * limitations under the License.
  */
 package com.squareup.picasso3;
-
-/** Designates the policy to use for network requests. */
-@SuppressWarnings("PointlessBitwiseExpression")
-public enum NetworkPolicy {
+import javax.annotation.Nullable;public enum NetworkPolicy {
 
   /** Skips checking the disk cache and forces loading through the network. */
   NO_CACHE(1 << 0),

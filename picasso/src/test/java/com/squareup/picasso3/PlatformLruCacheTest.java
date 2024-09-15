@@ -15,10 +15,7 @@
  */
 
 package com.squareup.picasso3;
-
-import android.graphics.Bitmap;
-import java.util.ArrayList;
-import java.util.Arrays;
+import javax.annotation.Nullable;import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import org.junit.Test;

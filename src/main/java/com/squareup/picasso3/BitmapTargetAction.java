@@ -14,41 +14,40 @@
  * limitations under the License.
  */
 package com.squareup.picasso3;
-
+import javax.annotation.Nullable;
 import android.graphics.Bitmap;
 import android.support.v4.content.ContextCompat;
-
 import static com.squareup.picasso3.Utils.checkNotNull;
 
 final class BitmapTargetAction extends Action<BitmapTarget> {
 
-  BitmapTargetAction(Picasso picasso, Target<BitmapTarget> wrapper, Request data) {
-    super(picasso, wrapper, data);
-  }
+    BitmapTargetAction(Picasso picasso, Target<BitmapTarget> wrapper, Request data) {
+        super(picasso, wrapper, data);
+    }
 
-  @Override void complete(RequestHandler.Result result) {
-    if (result == null) {
-      throw new AssertionError(
-          String.format("Attempted to complete action with no result!\n%s", this));
+    @Override
+    void complete(RequestHandler.Result result) {
+        if (result == null) {
+            throw new AssertionError(String.format("Attempted to complete action with no result!\n%s", this));
+        }
+        BitmapTarget target = getTarget();
+        Bitmap bitmap = result.getBitmap();
+        if (bitmap != null) {
+            target.onBitmapLoaded(bitmap, result.getLoadedFrom());
+            if (bitmap.isRecycled()) {
+                throw new IllegalStateException("Target callback must not recycle bitmap!");
+            }
+        }
     }
-    BitmapTarget target = getTarget();
-    Bitmap bitmap = result.getBitmap();
-    if (bitmap != null) {
-      target.onBitmapLoaded(bitmap, result.getLoadedFrom());
-      if (bitmap.isRecycled()) {
-        throw new IllegalStateException("Target callback must not recycle bitmap!");
-      }
-    }
-  }
 
-  @Override void error(Exception e) {
-    BitmapTarget target = getTarget();
-    Target<BitmapTarget> wrapper = checkNotNull(this.wrapper, "wrapper == null");
-    if (wrapper.errorResId != 0) {
-      target.onBitmapFailed(e,
-          ContextCompat.getDrawable(picasso.context, wrapper.errorResId));
-    } else {
-      target.onBitmapFailed(e, wrapper.errorDrawable);
+    @Override
+    void error(Exception e) {
+        BitmapTarget target = getTarget();
+        Target<BitmapTarget> wrapper = checkNotNull(this.wrapper, "wrapper == null");
+        if (wrapper.errorResId != 0) {
+            target.onBitmapFailed(e, ContextCompat.getDrawable(picasso.context, wrapper.errorResId));
+        } else {
+            target.onBitmapFailed(e, wrapper.errorDrawable);
+        }
     }
-  }
 }

@@ -1,8 +1,5 @@
 package com.squareup.picasso3;
-
-import org.junit.Test;
-
-import static com.google.common.truth.Truth.assertThat;
+import javax.annotation.Nullable;import static com.google.common.truth.Truth.assertThat;
 
 public class MemoryPolicyTest {
 
