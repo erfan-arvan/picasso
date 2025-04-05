@@ -30,7 +30,7 @@ index 96b7514c..22f1c402 100644
    }
    @Override
    public void load( Picasso picasso,  Request request,  Callback callback) {
-//C3: Field Initialization
+//Others: change the logic of the method
 -    if (assetManager == null) {
 -      synchronized (lock) {
 -        if (assetManager == null) {
@@ -38,6 +38,7 @@ index 96b7514c..22f1c402 100644
 -        }
 -      }
 -    }
+//C3: Field Initialization
 +    initializeIfFirstTime();
      boolean signaledCallback = false;
      try {
@@ -46,7 +47,7 @@ index 96b7514c..22f1c402 100644
        }
      }
    }
-//C3: Field initialization
+//C7: Method/Constructor definition or Override
 +  @Initializer
 +  private void initializeIfFirstTime() {
 +    if (assetManager == null) {
@@ -93,10 +94,11 @@ index 8fa81a14..d2251189 100644
    }
    private Priority computeNewPriority() {
      Priority newPriority = LOW;
-//C4: mark elements as final
 -    boolean hasMultiple = actions != null && !actions.isEmpty();
 -    boolean hasAny = action != null || hasMultiple;
+//C4: mark elements as final
 +    final boolean hasMultiple = actions != null && !actions.isEmpty();
+//C4: mark elements as final
 +    final boolean hasAny = action != null || hasMultiple;
      if (!hasAny) {
        return newPriority;
@@ -152,7 +154,7 @@ index c5ff06b9..3124b8c5 100644
    public void load( Picasso picasso,  Request request,  Callback callback) {
      boolean signaledCallback = false;
      try {
-//C1: Null Check Introduction
+//Others: change the logic of the method
 -      Source source = getSource(request);
 -      if (source == null) {
 -        signaledCallback = true;
@@ -382,8 +384,11 @@ index 00000000..d1d723b9
 +++ b/picasso/src/main/java/com/squareup/picasso3/Initializer.java
 @@ -0,0 +1,5 @@
 +package com.squareup.picasso3;
+//Others: Added a confic annotation
 +@Retention(SOURCE)
+//Others: Added a confic annotation
 +@RestrictTo(LIBRARY)
+//C3: Field Initialization
 +public @interface Initializer {
 +}
 diff --git a/picasso/src/main/java/com/squareup/picasso3/MediaStoreRequestHandler.java b/picasso/src/main/java/com/squareup/picasso3/MediaStoreRequestHandler.java
@@ -554,7 +559,7 @@ index d63d89bf..d3d8bd4f 100644
 +      Exception exception = checkNotNull(e, "e == null");
 +      action.error(exception);
        if (loggingEnabled) {
-//Adjustments related to C1
+//Others: Adjustment related to adding nullchecks
 -        log(OWNER_MAIN, VERB_ERRORED, action.request.logId(), e.getMessage());
 +        log(OWNER_MAIN, VERB_ERRORED, action.request.logId(), exception.getMessage());
        }
