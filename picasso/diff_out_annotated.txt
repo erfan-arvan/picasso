@@ -233,25 +233,27 @@ index 245e95a8..2f453eba 100644
        }
      }
    }
-//Others: Replacing return null with throwing an exception
+//C5: Method signature modification
 -  Source getSource(Request request) throws FileNotFoundException {
 +  Source getSource(Uri uri) throws FileNotFoundException {
      ContentResolver contentResolver = context.getContentResolver();
 -    InputStream inputStream = contentResolver.openInputStream(request.uri);
 -    return inputStream == null ? null : Okio.source(inputStream);
+//Others: Replacing return null with throwing an exception
 +    InputStream inputStream = contentResolver.openInputStream(uri);
 +    if (inputStream == null) {
 +      throw new FileNotFoundException("can't open input stream, uri: " + uri);
 +    }
 +    return Okio.source(inputStream);
    }
-//Others: Replacing return null with throwing an exception
+//C5: Method signature modification
 -  protected int getExifOrientation(Request request) throws IOException {
 +  protected int getExifOrientation(Uri uri) throws IOException {
      ContentResolver contentResolver = context.getContentResolver();
      InputStream inputStream = null;
      try {
 -      inputStream = contentResolver.openInputStream(request.uri);
+//Others: Replacing return null with throwing an exception
 +      inputStream = contentResolver.openInputStream(uri);
 +      if (inputStream == null) {
 +        throw new FileNotFoundException("can't open input stream, uri: " + uri);
@@ -332,10 +334,11 @@ index 5a52574c..6f2b3deb 100644
        }
      }
    }
-//C1: Null Check Introduction
+//C5: Method signature modification
 -  @Override protected int getExifOrientation(Request request) throws IOException {
 -    ExifInterface exifInterface = new ExifInterface(request.uri.getPath());
 +  @Override protected int getExifOrientation(Uri uri) throws IOException {
+//C1: Null Check Introduction
 +    String path = uri.getPath();
 +    if (path == null) {
 +      throw new FileNotFoundException("path == null, uri: " + uri);
@@ -543,7 +546,7 @@ index d63d89bf..d3d8bd4f 100644
        }
      }
    }
-//C5: Method signature modification
+//Not a real change
 -  private void deliverAction(RequestHandler.Result result, Action action, Exception e) {
 +  private void deliverAction( RequestHandler.Result result, Action action,
 +       Exception e) {
@@ -700,6 +703,7 @@ index 38944b0d..82b1223a 100644
    }
 //C1: Null Check Introduction
 -  static <T> T checkNotNull(T value, String message) {
+//C5: Method signature modification
 +  public static  <T> T checkNotNull( T value,  String message) {
      if (value == null) {
        throw new NullPointerException(message);
