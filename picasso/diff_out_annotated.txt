@@ -703,7 +703,6 @@ index 38944b0d..82b1223a 100644
    }
 //C1: Null Check Introduction
 -  static <T> T checkNotNull(T value, String message) {
-//C5: Method signature modification
 +  public static  <T> T checkNotNull( T value,  String message) {
      if (value == null) {
        throw new NullPointerException(message);
