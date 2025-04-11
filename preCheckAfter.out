@@ -1,0 +1,68 @@
+../dataset/picasso_pre_nullgtn/src/main/java/com/squareup/picasso3/AssetRequestHandler.java:53: error: (override.param) $$ 7 $$ request $$ @Initialized @NonNull Request $$ @Initialized @Nullable Request $$ @Initialized @NonNull AssetRequestHandler $$ @NonNull void load(@Initialized @NonNull AssetRequestHandler this, @Initialized @Nullable Picasso p0, @Initialized @NonNull Request p1, @Initialized @NonNull Callback p2) $$ @Initialized @NonNull RequestHandler $$ @NonNull void load(@Initialized @NonNull RequestHandler this, @Initialized @Nullable Picasso p0, @Initialized @Nullable Request p1, @Initialized @Nullable Callback p2) throws @Initialized @NonNull IOException $$ ( 1785, 1800 ) $$ Incompatible parameter type for request.
+    public void load(@Nullable Picasso picasso, Request request, Callback callback) {
+                                                        ^
+  found   : @Initialized @NonNull Request
+  required: @Initialized @Nullable Request
+  Consequence: method in @Initialized @NonNull AssetRequestHandler
+    @NonNull void load(@Initialized @NonNull AssetRequestHandler this, @Initialized @Nullable Picasso p0, @Initialized @NonNull Request p1, @Initialized @NonNull Callback p2)
+  cannot override method in @Initialized @NonNull RequestHandler
+    @NonNull void load(@Initialized @NonNull RequestHandler this, @Initialized @Nullable Picasso p0, @Initialized @Nullable Request p1, @Initialized @Nullable Callback p2) throws @Initialized @NonNull IOException
+../dataset/picasso_pre_nullgtn/src/main/java/com/squareup/picasso3/AssetRequestHandler.java:53: error: (override.param) $$ 7 $$ callback $$ @Initialized @NonNull Callback $$ @Initialized @Nullable Callback $$ @Initialized @NonNull AssetRequestHandler $$ @NonNull void load(@Initialized @NonNull AssetRequestHandler this, @Initialized @Nullable Picasso p0, @Initialized @NonNull Request p1, @Initialized @NonNull Callback p2) $$ @Initialized @NonNull RequestHandler $$ @NonNull void load(@Initialized @NonNull RequestHandler this, @Initialized @Nullable Picasso p0, @Initialized @Nullable Request p1, @Initialized @Nullable Callback p2) throws @Initialized @NonNull IOException $$ ( 1802, 1819 ) $$ Incompatible parameter type for callback.
+    public void load(@Nullable Picasso picasso, Request request, Callback callback) {
+                                                                          ^
+  found   : @Initialized @NonNull Callback
+  required: @Initialized @Nullable Callback
+  Consequence: method in @Initialized @NonNull AssetRequestHandler
+    @NonNull void load(@Initialized @NonNull AssetRequestHandler this, @Initialized @Nullable Picasso p0, @Initialized @NonNull Request p1, @Initialized @NonNull Callback p2)
+  cannot override method in @Initialized @NonNull RequestHandler
+    @NonNull void load(@Initialized @NonNull RequestHandler this, @Initialized @Nullable Picasso p0, @Initialized @Nullable Request p1, @Initialized @Nullable Callback p2) throws @Initialized @NonNull IOException
+../dataset/picasso_pre_nullgtn/src/main/java/com/squareup/picasso3/AssetRequestHandler.java:82: error: (dereference.of.nullable) $$ 1 $$ request.uri $$ ( 2720, 2731 ) $$ dereference of possibly-null reference request.uri
+        return request.uri.toString().substring(ASSET_PREFIX_LENGTH);
+                      ^
+../dataset/picasso_pre_nullgtn/src/main/java/com/squareup/picasso3/ResourceDrawableRequestHandler.java:36: error: (override.param) $$ 7 $$ data $$ @Initialized @NonNull Request $$ @Initialized @Nullable Request $$ @Initialized @NonNull ResourceDrawableRequestHandler $$ @Initialized @NonNull boolean canHandleRequest(@Initialized @NonNull ResourceDrawableRequestHandler this, @Initialized @NonNull Request p0) $$ @Initialized @NonNull RequestHandler $$ @Initialized @NonNull boolean canHandleRequest(@Initialized @NonNull RequestHandler this, @Initialized @Nullable Request p0) $$ ( 1253, 1265 ) $$ Incompatible parameter type for data.
+    public boolean canHandleRequest(Request data) {
+                                            ^
+  found   : @Initialized @NonNull Request
+  required: @Initialized @Nullable Request
+  Consequence: method in @Initialized @NonNull ResourceDrawableRequestHandler
+    @Initialized @NonNull boolean canHandleRequest(@Initialized @NonNull ResourceDrawableRequestHandler this, @Initialized @NonNull Request p0)
+  cannot override method in @Initialized @NonNull RequestHandler
+    @Initialized @NonNull boolean canHandleRequest(@Initialized @NonNull RequestHandler this, @Initialized @Nullable Request p0)
+../dataset/picasso_pre_nullgtn/src/main/java/com/squareup/picasso3/ResourceDrawableRequestHandler.java:41: error: (override.param) $$ 7 $$ request $$ @Initialized @NonNull Request $$ @Initialized @Nullable Request $$ @Initialized @NonNull ResourceDrawableRequestHandler $$ @NonNull void load(@Initialized @NonNull ResourceDrawableRequestHandler this, @Initialized @Nullable Picasso p0, @Initialized @NonNull Request p1, @Initialized @NonNull Callback p2) $$ @Initialized @NonNull RequestHandler $$ @NonNull void load(@Initialized @NonNull RequestHandler this, @Initialized @Nullable Picasso p0, @Initialized @Nullable Request p1, @Initialized @Nullable Callback p2) throws @Initialized @NonNull IOException $$ ( 1433, 1448 ) $$ Incompatible parameter type for request.
+    public void load(@Nullable Picasso picasso, Request request, Callback callback) {
+                                                        ^
+  found   : @Initialized @NonNull Request
+  required: @Initialized @Nullable Request
+  Consequence: method in @Initialized @NonNull ResourceDrawableRequestHandler
+    @NonNull void load(@Initialized @NonNull ResourceDrawableRequestHandler this, @Initialized @Nullable Picasso p0, @Initialized @NonNull Request p1, @Initialized @NonNull Callback p2)
+  cannot override method in @Initialized @NonNull RequestHandler
+    @NonNull void load(@Initialized @NonNull RequestHandler this, @Initialized @Nullable Picasso p0, @Initialized @Nullable Request p1, @Initialized @Nullable Callback p2) throws @Initialized @NonNull IOException
+../dataset/picasso_pre_nullgtn/src/main/java/com/squareup/picasso3/ResourceDrawableRequestHandler.java:41: error: (override.param) $$ 7 $$ callback $$ @Initialized @NonNull Callback $$ @Initialized @Nullable Callback $$ @Initialized @NonNull ResourceDrawableRequestHandler $$ @NonNull void load(@Initialized @NonNull ResourceDrawableRequestHandler this, @Initialized @Nullable Picasso p0, @Initialized @NonNull Request p1, @Initialized @NonNull Callback p2) $$ @Initialized @NonNull RequestHandler $$ @NonNull void load(@Initialized @NonNull RequestHandler this, @Initialized @Nullable Picasso p0, @Initialized @Nullable Request p1, @Initialized @Nullable Callback p2) throws @Initialized @NonNull IOException $$ ( 1450, 1467 ) $$ Incompatible parameter type for callback.
+    public void load(@Nullable Picasso picasso, Request request, Callback callback) {
+                                                                          ^
+  found   : @Initialized @NonNull Callback
+  required: @Initialized @Nullable Callback
+  Consequence: method in @Initialized @NonNull ResourceDrawableRequestHandler
+    @NonNull void load(@Initialized @NonNull ResourceDrawableRequestHandler this, @Initialized @Nullable Picasso p0, @Initialized @NonNull Request p1, @Initialized @NonNull Callback p2)
+  cannot override method in @Initialized @NonNull RequestHandler
+    @NonNull void load(@Initialized @NonNull RequestHandler this, @Initialized @Nullable Picasso p0, @Initialized @Nullable Request p1, @Initialized @Nullable Callback p2) throws @Initialized @NonNull IOException
+../dataset/picasso_pre_nullgtn/src/main/java/com/squareup/picasso3/ResourceDrawableRequestHandler.java:58: error: (override.param) $$ 7 $$ resId $$ @Initialized @NonNull int $$ @Initialized @Nullable int $$ @Initialized @NonNull <anonymous com.squareup.picasso3.ResourceDrawableRequestHandler$1> $$ @Initialized @NonNull Drawable load(@Initialized @NonNull <anonymous com.squareup.picasso3.ResourceDrawableRequestHandler$1> this, @Initialized @NonNull int p0) $$ @Initialized @NonNull DrawableLoader $$ @Initialized @NonNull Drawable load(@Initialized @NonNull DrawableLoader this, @Initialized @Nullable int p0) $$ ( 2143, 2152 ) $$ Incompatible parameter type for resId.
+            public Drawable load(int resId) {
+                                     ^
+  found   : @Initialized @NonNull int
+  required: @Initialized @Nullable int
+  Consequence: method in @Initialized @NonNull <anonymous com.squareup.picasso3.ResourceDrawableRequestHandler$1>
+    @Initialized @NonNull Drawable load(@Initialized @NonNull <anonymous com.squareup.picasso3.ResourceDrawableRequestHandler$1> this, @Initialized @NonNull int p0)
+  cannot override method in @Initialized @NonNull DrawableLoader
+    @Initialized @NonNull Drawable load(@Initialized @NonNull DrawableLoader this, @Initialized @Nullable int p0)
+../dataset/picasso_pre_nullgtn/src/main/java/com/squareup/picasso3/ResourceDrawableRequestHandler.java:59: error: (return) $$ 2 $$ @Initialized @Nullable Drawable $$ @Initialized @NonNull Drawable $$ ( 2179, 2220 ) $$ incompatible types in return.
+                return ContextCompat.getDrawable(context, resId);
+                                                ^
+  type of expression: @Initialized @Nullable Drawable
+  method return type: @Initialized @NonNull Drawable
+Note: Some input files use or override a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+Note: ../dataset/picasso_pre_nullgtn/src/main/java/com/squareup/picasso3/Picasso.java uses unchecked or unsafe operations.
+Note: Recompile with -Xlint:unchecked for details.
+
+26 errors
